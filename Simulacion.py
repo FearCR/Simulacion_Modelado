@@ -1,3 +1,7 @@
+
+from random import random
+import math
+
 MAX_VALUE = 999999999
 clock = 0
 time_to_finish = 5000
@@ -7,6 +11,40 @@ s1_server1 = False
 s2_server1 = False
 s2_server2 = False
 events = [MAX_VALUE,MAX_VALUE,MAX_VALUE,MAX_VALUE,MAX_VALUE,MAX_VALUE,MAX_VALUE]
+
+def uniforme(a,b):
+    r=random()
+    x=(b-a)*r+a
+    return int(x)
+
+def normal(Mu,vari):
+    r1 = random()
+    r2 = random()
+    Z=(-2*math.log(r1))
+    Z=pow(Z,1/2)
+    pi=math.pi
+    Z=Z*(math.cos(2*pi*r2))
+    x=(vari*Z)+Mu
+    if x<0:
+        x=-1*x
+    return int(x)
+
+def exponencial(lamb):
+    r = random()
+    x=(-math.log(1-r))/lamb
+    return int(x)
+
+def convolucion(Mu,vari):
+    Z=0
+    for i in range(1,13):
+        r = random()
+        Z=Z+r
+    x = (vari * Z) + Mu
+    return int(x)
+
+def funcionDensidad(funcion,a,b):
+    print("por implementar")
+
 
 
 
@@ -45,6 +83,21 @@ def event_two():
 def event_three():
 	return
 def event_four():
+	global queue_s1
+	global events
+	global MAX_VALUE
+	global s1_server1
+	clock = events[3]
+	if queue_s1 > 0:
+		queue_s1 = queue_s1 - 1
+		d2 = generate_d2()
+		events[3] = int(clock) + int(d2)
+	else:
+		events[3] = MAX_VALUE
+		s1_server1 = False
+	random_value = int(generate_random())
+	if random_value > 10:			#el 90% de las veces no se desecha y se programa el evento 5
+		events[4] = clock + 1
 	return
 def event_five():
 	return
@@ -52,7 +105,7 @@ def event_six():
 	return
 def event_seven():
 	return
-	
+
 def data_init(e1):
 	events[0]=e1
 
@@ -78,7 +131,7 @@ def main():
 		}
 		func = switcher.get(event, "invalid event")
 		clock=time_to_finish
-
+		print(normal(25,100))
 
 if __name__ == "__main__":
     main()

@@ -1,8 +1,41 @@
+MAX_VALUE = 999999999
+clock = 0
+time_to_finish = 5000
+queue_s1 = 0
+queue_s2 = 0
+s1_server1 = False
+s2_server1 = False
+s2_server2 = False
+events = [MAX_VALUE,MAX_VALUE,MAX_VALUE,MAX_VALUE,MAX_VALUE,MAX_VALUE,MAX_VALUE]
+
+
 def get_next_event(events):
 	return 0
 
+
+def generate_d2():
+	return 0
+
+def generate_d1():
+	return 0
+
 def event_one():
+	global s1_server1
+	global events
+	global queue_s1
+	clock = events[0]
+	if s1_server1 == False:
+		s1_server1 = True
+		d2 = generate_d2()
+		events[3] = int(clock) + int(d2)
+		print(s1_server1)
+	else:
+		queue_s1 = queue_s1 + 1
+		d1 = generate_d1()
+		events[0] = int(clock) + int(d1)
+		print(s1_server1)
 	return
+	
 def event_two():
 	return
 def event_three():
@@ -16,15 +49,6 @@ def event_six():
 def event_seven():
 	return
 
-MAX_VALUE = 999999999
-clock = 0
-time_to_finish = 5000
-queue_s1 = []
-queue_s2 = []
-s1_server1 = False
-s2_server1 = False
-s2_server2 = False
-events = [MAX_VALUE,MAX_VALUE,MAX_VALUE,MAX_VALUE,MAX_VALUE,MAX_VALUE,MAX_VALUE]
 
 while clock < time_to_finish:
 	event = get_next_event(events)

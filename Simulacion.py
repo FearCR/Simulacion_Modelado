@@ -100,7 +100,7 @@ def event_four():
 		events[3] = MAX_VALUE
 		s1_server1 = False
 	random_value = randrange(100)
-	if random_value > 10:			#el 90% de las veces no se desecha y se programa el evento 5
+	if random_value >= 10:			#el 90% de las veces no se desecha y se programa el evento 5
 		events[4] = clock + 1
 	return
 
@@ -131,7 +131,23 @@ def event_five():
 	return
 def event_six():
 	return
+
+#se desocupa el servidor 2 de la seccion 2
 def event_seven():
+	global clock
+	global queue_s2
+	global s2_server2
+	clock = events[6]
+	if queue_s2 >= 2:
+		queue_s2 = queue_s2 - 2
+		d4 = generate_d4()
+		events[6] = int(clock) + int(d4)
+	else:
+		events[6] = MAX_VALUE
+		s2_server2 = False
+	random_value = randrange(100)
+	if random_value >= 15 and random_value < 40:
+		events[2] = int(clock) + 2 
 	return
 
 def data_init(e1):

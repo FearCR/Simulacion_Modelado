@@ -1,4 +1,4 @@
-
+def get_next_event(events):
 	return 0
 
 def event_one():

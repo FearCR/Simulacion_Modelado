@@ -89,11 +89,29 @@ def event_one():
     return
 
 
-def event_two():
+def event_two(): #Ale
     return
 
 
 def event_three():
+    global s1_server1
+    global events
+    global queue_s1
+    global clock
+    clock = events[0]
+    if s1_server1 == False:
+        s1_server1 = True
+        queue_s1 = queue_s1 + 1
+        d2 = generate_d2()
+        events[3] = int(clock) + int(d2)
+        print(s1_server1)
+    else:
+        queue_s1 = queue_s1 + 2
+
+
+
+
+
     return
 
 
@@ -117,7 +135,7 @@ def event_four():
     return
 
 
-def event_five():
+def event_five():#Isacc
     return
 
 

@@ -19,6 +19,20 @@ def get_next_event(events):
 	return next_event
 
 def event_one():
+	global s1_server1
+	global events
+	global queue_s1
+	clock = events[0]
+	if s1_server1 == False:
+		s1_server1 = True
+		d2 = generate_d2()
+		events[3] = int(clock) + int(d2)
+		print(s1_server1)
+	else:
+		queue_s1 = queue_s1 + 1
+		d1 = generate_d1()
+		events[0] = int(clock) + int(d1)
+		print(s1_server1)
 	return
 def event_two():
 	return
@@ -34,6 +48,7 @@ def event_seven():
 	return
 
 def main():
+	global clock
 	data_init(3)
 	while clock < time_to_finish:
 		event = get_next_event(events)
@@ -47,6 +62,7 @@ def main():
 			6:event_seven
 		}
 		func = switcher.get(event, "invalid event")
+		clock=time_to_finish
 
 
 if __name__ == "__main__":

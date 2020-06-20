@@ -81,21 +81,21 @@ def event_one():
 	return
 def event_two():
     global clock
-	global s1_server1
-	global events
-	global queue_s1
+    global s1_server1
+    global events
+    global queue_s1
     clock=events[1]
     if s1_server1 == False:
         queue_s1 = queue_s1 + 1
         s1_server1==True
         d2 = generate_d2()
-		events[3] = int(clock) + int(d2)
+        events[3] = int(clock) + int(d2)
         print(s1_server1)
     else:
-    	queue_s1 = queue_s1 + 2
-    	print(s1_server1)
+        queue_s1 = queue_s1 + 2
+        print(s1_server1)
 
-	return
+    return
 def event_three():
 	return
 def event_four():

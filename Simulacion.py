@@ -1,5 +1,6 @@
 
 from random import random
+from random import randrange
 import math
 
 MAX_VALUE = 999999999
@@ -95,7 +96,7 @@ def event_four():
 	else:
 		events[3] = MAX_VALUE
 		s1_server1 = False
-	random_value = int(generate_random())
+	random_value = randrange(100)
 	if random_value > 10:			#el 90% de las veces no se desecha y se programa el evento 5
 		events[4] = clock + 1
 	return
@@ -132,6 +133,7 @@ def main():
 		func = switcher.get(event, "invalid event")
 		clock=time_to_finish
 		print(normal(25,100))
+		print(randrange(100))
 
 if __name__ == "__main__":
     main()

@@ -74,6 +74,7 @@ def event_one():
     global s1_server1
     global events
     global queue_s1
+    global clock
     clock = events[0]
     if s1_server1 == False:
         s1_server1 = True
@@ -101,6 +102,7 @@ def event_four():
     global events
     global MAX_VALUE
     global s1_server1
+    global clock
     clock = events[3]
     if queue_s1 > 0:
         queue_s1 = queue_s1 - 1
@@ -126,6 +128,7 @@ def event_six():
     global queue_s2
     global paquetesListos
     global mascarillasDesechadas
+    global clock
     s2_server1 = False
     clock = events[5]
     if queue_s2>=2:

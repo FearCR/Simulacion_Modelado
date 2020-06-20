@@ -8,15 +8,21 @@ s2_server1 = False
 s2_server2 = False
 events = [MAX_VALUE,MAX_VALUE,MAX_VALUE,MAX_VALUE,MAX_VALUE,MAX_VALUE,MAX_VALUE]
 
-def data_init(e1):
-	events[0]=e1
 
-def get_next_event(events):
-	next_event=0
-	for i in range (len(events)):
-		if events[i]<events[next_event]:
-			next_event=i
-	return next_event
+
+def generate_d1():
+	return 0
+
+def generate_d2():
+	return 0
+
+def generate_d3():
+	return 0
+
+def generate_d4():
+	return 0
+
+
 
 def event_one():
 	global s1_server1
@@ -46,7 +52,16 @@ def event_six():
 	return
 def event_seven():
 	return
+	
+def data_init(e1):
+	events[0]=e1
 
+def get_next_event(events):
+	next_event=0
+	for i in range (len(events)):
+		if events[i]<events[next_event]:
+			next_event=i
+	return next_event
 def main():
 	global clock
 	data_init(3)

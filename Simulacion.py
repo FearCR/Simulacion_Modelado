@@ -4,7 +4,7 @@ from random import randrange
 import math
 
 MAX_VALUE = 999999999
-TIME_TO_FINISH = 5000
+TIME_TO_FINISH = 20
 clock = 0
 queue_s1 = 0
 queue_s2 = 0
@@ -68,12 +68,12 @@ def generate_d4():
 
 #llega mascarilla del exterior a Seccion 1
 def event_one():
-    print("e1")
     global clock
     global s1_server1
     global events
     global queue_s1
     clock = events[0]
+    print("e1",events,clock)
     if s1_server1 == False:
         s1_server1 = True
         d2 = generate_d2()
@@ -88,12 +88,12 @@ def event_one():
 
 #llegan 2 mascarillas de la seccion 2 servidor1
 def event_two():
-    print("e2")
     global clock
     global s1_server1
     global events
     global queue_s1
     clock=events[1]
+    print("e2",events,clock)
     if s1_server1 == False:
         queue_s1 = queue_s1 + 1
         s1_server1==True
@@ -103,17 +103,17 @@ def event_two():
     else:
         queue_s1 = queue_s1 + 2
         print(s1_server1)
-
+    events[1]=MAX_VALUE
     return
 
 #llegan 2 mascarillas de la seccion 2 servidor2
 def event_three():
-    print("e3")
     global s1_server1
     global events
     global queue_s1
     global clock
-    clock = events[0]
+    clock = events[2]
+    print("e3",events,clock)
     if s1_server1 == False:
         s1_server1 = True
         queue_s1 = queue_s1 + 1
@@ -122,17 +122,18 @@ def event_three():
         print(s1_server1)
     else:
         queue_s1 = queue_s1 + 2
+    events[2]=MAX_VALUE
     return
 
 #se desocupa la seccion 1
 def event_four():
-    print("e4")
     global clock
     global queue_s1
     global events
     global MAX_VALUE
     global s1_server
     clock = events[3]
+    print("e4",events,clock)
     if queue_s1 > 0:
         queue_s1 = queue_s1 - 1
         d2 = generate_d2()
@@ -147,12 +148,13 @@ def event_four():
 
 #llega una mascarilla a la seccion 2
 def event_five():
-    print("e5")
     global clock
+    global events
     global s2_server1
     global s2_server2
     global queue_s2
     clock = events[4]
+    print("e5",events,clock)
     if queue_s2 >= 1:
         if s2_server1 == False | s2_server2 == False:
             if s2_server1 == False:
@@ -170,12 +172,11 @@ def event_five():
             queue_s2 = queue_s2 + 1
     else:
         queue_s2 = queue_s2 + 1
-
+    events[4]=MAX_VALUE
     return
 
 #se desocupa el servidor 1 de la seccion 2
 def event_six():
-    print("e6")
     global events
     global MAX_VALUE
     global s2_server1
@@ -185,27 +186,27 @@ def event_six():
     global clock
     s2_server1 = False
     clock = events[5]
-    if queue_s2>=2:
+    print("e6",events,clock)
+    if queue_s2 >= 2:
         queue_s2 = queue_s2 - 2
         d3 = generate_d3()
-        events[5] = int(clock) + int(d3)
+        events[5] = int(clock) + int(d4)
+    else:
+        events[5] = MAX_VALUE
+        s2_server1 = False
     random_value = randrange(100)
-    if random_value > 20:  # el 20% de lo envia la seccion 1
-        events[1] = clock + 2
-    if random_value > 5:
-        mascarillasDesechadas=mascarillasDesechadas+2
-    if random_value > 75:
-        paquetesListos=paquetesListos+1
-
+    if random_value >= 20:
+        events[1] = int(clock) + 2
+    return
     return
 
 #se desocupa el servidor 2 de la seccion 2
 def event_seven():
-    print("e7")
     global clock
     global queue_s2
     global s2_server2
     clock = events[6]
+    print("e7",events,clock)
     if queue_s2 >= 2:
         queue_s2 = queue_s2 - 2
         d4 = generate_d4()

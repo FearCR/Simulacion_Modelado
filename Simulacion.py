@@ -3,16 +3,39 @@ from random import randrange
 import math
 
 MAX_VALUE = 999999999
-TIME_TO_FINISH = 200
+TIME_TO_FINISH = 500
 clock = 0
 queue_s1 = 0
 queue_s2 = 0
 s1_server1 = False
 s2_server1 = False
 s2_server2 = False
+
+tiempoTrabajador1=0
+tiempoTrabajador2=0
+tiempoTrabajador3=0
+
 paquetesListos=0
 mascarillasDesechadas=0
 events = [[MAX_VALUE],[],[],[MAX_VALUE],[],[MAX_VALUE],[MAX_VALUE]]
+distributions = [-1,-1,-1,-1]
+
+
+#parametros uniforme
+uniform_param_1 = [0,0,0,0]
+uniform_param_2 = [0,0,0,0]
+
+#parametros normal
+normal_param_1 = [0,0,0,0]
+normal_param_2 = [0,0,0,0]
+
+#parametros exponencial
+exponential_param = [0,0,0,0]
+
+#parametros convolucion
+convolution_param_1 = [0,0,0,0]
+convolution_param_2 = [0,0,0,0]
+
 
 
 #distribuciones
@@ -53,27 +76,82 @@ def funcionDensidad(funcion,a,b):
 
 #Generacion de numeros aleatoreos con las distribuciones deseadas
 def generate_d1():
-	return 2
+	if distributions[0] == 1:
+		return uniforme(uniform_param_1[0],uniform_param_2[0])
+	else:
+		if distributions[0] == 2:
+			return normal(normal_param_1[0],normal_param_2[0])
+		else:
+			if distributions[0] == 3:
+				return exponencial(exponential_param[0])
+			else:
+				return convolucion(convolution_param_1[0],convolution_param_2[0])
 
 def generate_d2():
-	return 2
+	if distributions[1] == 1:
+		return uniforme(uniform_param_1[1],uniform_param_2[1])
+	else:
+		if distributions[1] == 2:
+			return normal(normal_param_1[1],normal_param_2[1])
+		else:
+			if distributions[1] == 3:
+				return exponencial(exponential_param[1])
+			else:
+				return convolucion(convolution_param_1[1],convolution_param_2[1])
 
 def generate_d3():
-	return 2
+	if distributions[2] == 1:
+		return uniforme(uniform_param_1[2],uniform_param_2[2])
+	else:
+		if distributions[2] == 2:
+			return normal(normal_param_1[2],normal_param_2[2])
+		else:
+			if distributions[2] == 3:
+				return exponencial(exponential_param[2])
+			else:
+				return convolucion(convolution_param_1[2],convolution_param_2[2])
 
 def generate_d4():
-	return 2
+	if distributions[3] == 1:
+		return uniforme(uniform_param_1[3],uniform_param_2[3])
+	else:
+		if distributions[3] == 2:
+			return normal(normal_param_1[3],normal_param_2[3])
+		else:
+			if distributions[3] == 3:
+				return exponencial(exponential_param[3])
+			else:
+				return convolucion(convolution_param_1[3],convolution_param_2[3])
 
+
+'''
+
+#Generacion de numeros aleatoreos con las distribuciones deseadas
+def generate_d1():
+	return uniforme(3,1)
+
+def generate_d2():
+	return normal(6,9)
+
+def generate_d3():
+	return exponencial(9)
+
+def generate_d4():
+	return convolucion(9,10)
+'''
 
 #llega mascarilla del exterior a Seccion 1
 def event_one():
     global clock
     global s1_server1
+    global tiempoTrabajador1
     global events
     global queue_s1
     clock = events[0][0]
     print("e1",events,clock)
     if s1_server1 == False:
+
+        tiempoTrabajador1=tiempoTrabajador1+1
         s1_server1 = True
         d2 = generate_d2()
         events[3][0] = clock + d2
@@ -90,11 +168,13 @@ def event_two():
     global clock
     global s1_server1
     global events
+    global tiempoTrabajador2
     global queue_s1
     clock=events[1].pop(0)
     print("e2",events,clock)
     if s1_server1 == False:
         queue_s1 = queue_s1 + 1
+        tiempoTrabajador2=tiempoTrabajador2+1
         s1_server1==True
         d2 = generate_d2()
         events[3][0] = clock + d2
@@ -109,10 +189,12 @@ def event_three():
     global s1_server1
     global events
     global queue_s1
+    global tiempoTrabajador3
     global clock
     clock = events[2].pop(0)
     print("e3",events,clock)
     if s1_server1 == False:
+        tiempoTrabajador3=tiempoTrabajador3+1
         s1_server1 = True
         queue_s1 = queue_s1 + 1
         d2 = generate_d2()
@@ -250,9 +332,43 @@ def main():
     global s2_server2
     global queue_s1
     global queue_s2
+    global distributions
     global paquetesListos
     global mascarillasDesechadas
+    global distributions
+    global uniform_param_1
+    global uniform_param_2
+    global normal_param_1
+    global normal_param_2
+    global exponential_param
+    global convolution_param_1
+    global convolution_param_2
     data_init(3)
+
+
+    distribution = 0
+    d=1
+    while distribution < 4:
+        print("seleccione cada una de las distribuciones que desea utilizar para d"+str(d))
+        distributions[distribution] = int(input("1 : Uniforme - 2: Normal  - 3 : Exponencial - 4 : Convolucion  : \n"))
+        if distributions[distribution] == 1:
+            uniform_param_1[distribution] = int(input("ingrese el primer parametro para la distribucion uniforme : "))
+            uniform_param_2[distribution] = int(input("ingrese el segundo parametro para la distrubicion uniforme : "))
+        else:
+            if distributions[distribution] == 2:
+                normal_param_1[distribution] = int(input("ingrese el primer parametro para la distribucion normal : "))
+                normal_param_2[distribution] = int(input("ingrese el segundo parametro para la distrubicion normal : "))
+            else:
+                if distributions[distribution] == 3:
+                    exponential_param[distribution] = int(input("ingrese el parametro para la distrubucion exponencial : "))
+                else:
+                    convolution_param_1[distribution] = int(input(
+                        "ingrese el primer parametro para la distribucion convolucion"))
+                    convolution_param_2[distribution] = int(input(
+                        "ingrese el segundo parametro para la distribucion convolucion"))
+        distribution = distribution + 1
+        d=d+1
+
     while clock < TIME_TO_FINISH:
         event = get_next_event(events)
         switcher = {
@@ -269,12 +385,14 @@ def main():
         #clock=TIME_TO_FINISH
         #print(normal(2,10))
         #print(randrange(100))
-    lista=[1,2,3]
-    print(lista.pop())
-    print(lista.pop())
-    print(lista.pop())
-    print(lista)
-    print(len(lista))
+    #lista=[1,2,3]
+
+    print("Mascarillas desechadas ",mascarillasDesechadas)
+    print("Paquetes listos ", paquetesListos)
+    #print("Tiempo ocuado Trabajador 1: ",(tiempoTrabajador1/TIME_TO_FINISH))
+    #print("Tiempo ocuado Trabajador 2: ",(tiempoTrabajador2/TIME_TO_FINISH))
+    #print("Tiempo ocuado Trabajador 3: ",(tiempoTrabajador3/TIME_TO_FINISH))
+
 
 
 

@@ -73,72 +73,19 @@ def funcionDensidad(funcion,a,b):
     print("por implementar")
 
 
-
-#Generacion de numeros aleatoreos con las distribuciones deseadas
-def generate_d1():
-	if distributions[0] == 1:
-		return uniforme(uniform_param_1[0],uniform_param_2[0])
+def generate_distribution(index_distribution):
+	if distributions[index_distribution] == 1:
+		return uniforme(uniform_param_1[index_distribution],uniform_param_2[index_distribution])
 	else:
-		if distributions[0] == 2:
-			return normal(normal_param_1[0],normal_param_2[0])
+		if distributions[index_distribution] == 2:
+			return normal(normal_param_1[index_distribution],normal_param_2[index_distribution])
 		else:
-			if distributions[0] == 3:
-				return exponencial(exponential_param[0])
+			if distributions[index_distribution] == 3:
+				return exponencial(exponential_param[index_distribution])
 			else:
-				return convolucion(convolution_param_1[0],convolution_param_2[0])
+				return convolucion(convolution_param_1[index_distribution],convolution_param_2[index_distribution])
+	return
 
-def generate_d2():
-	if distributions[1] == 1:
-		return uniforme(uniform_param_1[1],uniform_param_2[1])
-	else:
-		if distributions[1] == 2:
-			return normal(normal_param_1[1],normal_param_2[1])
-		else:
-			if distributions[1] == 3:
-				return exponencial(exponential_param[1])
-			else:
-				return convolucion(convolution_param_1[1],convolution_param_2[1])
-
-def generate_d3():
-	if distributions[2] == 1:
-		return uniforme(uniform_param_1[2],uniform_param_2[2])
-	else:
-		if distributions[2] == 2:
-			return normal(normal_param_1[2],normal_param_2[2])
-		else:
-			if distributions[2] == 3:
-				return exponencial(exponential_param[2])
-			else:
-				return convolucion(convolution_param_1[2],convolution_param_2[2])
-
-def generate_d4():
-	if distributions[3] == 1:
-		return uniforme(uniform_param_1[3],uniform_param_2[3])
-	else:
-		if distributions[3] == 2:
-			return normal(normal_param_1[3],normal_param_2[3])
-		else:
-			if distributions[3] == 3:
-				return exponencial(exponential_param[3])
-			else:
-				return convolucion(convolution_param_1[3],convolution_param_2[3])
-
-
-'''
-
-#Generacion de numeros aleatoreos con las distribuciones deseadas
-def generate_d1():
-	return uniforme(3,1)
-
-def generate_d2():
-	return normal(6,9)
-
-def generate_d3():
-	return exponencial(9)
-
-def generate_d4():
-	return convolucion(9,10)
-'''
 
 #llega mascarilla del exterior a Seccion 1
 def event_one():
@@ -153,12 +100,12 @@ def event_one():
 
         tiempoTrabajador1=tiempoTrabajador1+1
         s1_server1 = True
-        d2 = generate_d2()
+        d2 = generate_distribution(2)
         events[3][0] = clock + d2
         print(s1_server1)
     else:
         queue_s1 = queue_s1 + 1
-        d1 = generate_d1()
+        d1 = generate_distribution(1)
         events[0][0] = clock + d1
         print(s1_server1)
         return
@@ -176,7 +123,7 @@ def event_two():
         queue_s1 = queue_s1 + 1
         tiempoTrabajador2=tiempoTrabajador2+1
         s1_server1==True
-        d2 = generate_d2()
+        d2 = generate_distribution(2)
         events[3][0] = clock + d2
         print(s1_server1)
     else:
@@ -197,7 +144,7 @@ def event_three():
         tiempoTrabajador3=tiempoTrabajador3+1
         s1_server1 = True
         queue_s1 = queue_s1 + 1
-        d2 = generate_d2()
+        d2 = generate_distribution(2)
         events[3][0] = clock + d2
         print(s1_server1)
     else:
@@ -216,7 +163,7 @@ def event_four():
     print("e4",events,clock)
     if queue_s1 > 0:
         queue_s1 = queue_s1 - 1
-        d2 = generate_d2()
+        d2 = generate_distribution(2)
         events[3][0] = clock + d2
     else:
         events[3][0] = MAX_VALUE
@@ -241,13 +188,13 @@ def event_five():
         if s2_server1 == False | s2_server2 == False:
             if s2_server1 == False:
                 queue_s2 = queue_s2 - 1
-                d3 = generate_d3()
+                d3 =generate_distribution(3)
                 events[5][0] = clock + d3
                 s2_server1 = True
             else:
 				#if s2_server2 == False:
                 queue_s2 = queue_s2 - 1
-                d4 = generate_d4()
+                d4 = generate_distribution(4)
                 events[6][0] = clock + d4
                 s2_server2 = True
         else:
@@ -270,7 +217,7 @@ def event_six():
     print("e6",events,clock)
     if queue_s2 >= 2:
         queue_s2 = queue_s2 - 2
-        d3 = generate_d3()
+        d3 = generate_distribution(3)
         events[5][0] = clock + d3
     else:
         events[5][0] = MAX_VALUE
@@ -296,7 +243,7 @@ def event_seven():
     print("e7",events,clock)
     if queue_s2 >= 2:
         queue_s2 = queue_s2 - 2
-        d4 = generate_d4()
+        d4 = generate_distribution(4)
         events[6][0] = clock + d4
     else:
         events[6][0] = MAX_VALUE

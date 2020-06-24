@@ -14,19 +14,19 @@ paquetesListos=0
 mascarillasDesechadas=0
 
 #parametros uniforme
-uniform_param_1 = 0
-uiform_param_2 = 0
+uniform_param_1 = [0,0,0,0]
+uniform_param_2 = [0,0,0,0]
 
 #parametros normal 
-normal_param_1 = 0
-normal_param_2 = 0
+normal_param_1 = [0,0,0,0]
+normal_param_2 = [0,0,0,0]
 
 #parametros exponencial 
-exponential_param = 0
+exponential_param = [0,0,0,0]
 
 #parametros convolucion
-convolution_param_1 = 0
-convolution_param_2 = 0
+convolution_param_1 = [0,0,0,0]
+convolution_param_2 = [0,0,0,0]
 
 
 distributions = [-1,-1,-1,-1]
@@ -73,51 +73,51 @@ def funcionDensidad(funcion,a,b):
 #Generacion de numeros aleatoreos con las distribuciones deseadas
 def generate_d1():
 	if distributions[0] == 1:
-		return uniforme(uniform_param_1,uniform_param_2)
+		return uniforme(uniform_param_1[0],uniform_param_2[0])
 	else:
 		if distributions[0] == 2:
-			return normal(normal_param_1,normal_param_2)
+			return normal(normal_param_1[0],normal_param_2[0])
 		else:
 			if distributions[0] == 3:
-				return exponencial(exponential_param)
+				return exponencial(exponential_param[0])
 			else:
-				return convolucion(convolution_param_1,convolution_param_2)
+				return convolucion(convolution_param_1[0],convolution_param_2[0])
 
 def generate_d2():
-	if distributions[0] == 1:
-		return uniforme(uniform_param_1,uniform_param_2)
+	if distributions[1] == 1:
+		return uniforme(uniform_param_1[1],uniform_param_2[1])
 	else:
-		if distributions[0] == 2:
-			return normal(normal_param_1,normal_param_2)
+		if distributions[1] == 2:
+			return normal(normal_param_1[1],normal_param_2[1])
 		else:
-			if distributions[0] == 3:
-				return exponencial(exponential_param)
+			if distributions[1] == 3:
+				return exponencial(exponential_param[1])
 			else:
-				return convolucion(convolution_param_1,convolution_param_2)
+				return convolucion(convolution_param_1[1],convolution_param_2[1])
 
 def generate_d3():
-	if distributions[0] == 1:
-		return uniforme(uniform_param_1,uniform_param_2)
+	if distributions[2] == 1:
+		return uniforme(uniform_param_1[2],uniform_param_2[2])
 	else:
-		if distributions[0] == 2:
-			return normal(normal_param_1,normal_param_2)
+		if distributions[2] == 2:
+			return normal(normal_param_1[2],normal_param_2[2])
 		else:
-			if distributions[0] == 3:
-				return exponencial(exponential_param)
+			if distributions[2] == 3:
+				return exponencial(exponential_param[2])
 			else:
-				return convolucion(convolution_param_1,convolution_param_2)
+				return convolucion(convolution_param_1[2],convolution_param_2[2])
 
 def generate_d4():
-	if distributions[0] == 1:
-		return uniforme(uniform_param_1,uniform_param_2)
+	if distributions[3] == 1:
+		return uniforme(uniform_param_1[3],uniform_param_2[3])
 	else:
-		if distributions[0] == 2:
-			return normal(normal_param_1,normal_param_2)
+		if distributions[3] == 2:
+			return normal(normal_param_1[3],normal_param_2[3])
 		else:
-			if distributions[0] == 3:
-				return exponencial(exponential_param)
+			if distributions[3] == 3:
+				return exponencial(exponential_param[3])
 			else:
-				return convolucion(convolution_param_1,convolution_param_2)
+				return convolucion(convolution_param_1[3],convolution_param_2[3])
 
 
 #llega mascarilla del exterior a Seccion 1
@@ -319,18 +319,18 @@ def main():
     while distribution < 4:
 		distributions[distribution] = input("1 : Uniforme - 2: Normal  - 3 : Exponencial - 4 : Convolucion  : \n")
 		if distributions[distribution] == 1:
-			uniform_param_1 = input("ingrese el primer parametro para la distribucion uniforme : ")
-			uniform_param_2 = input("ingrese el segundo parametro para la distrubicion uniforme : ")
+			uniform_param_1[distribution] = input("ingrese el primer parametro para la distribucion uniforme : ")
+			uniform_param_2[distribution] = input("ingrese el segundo parametro para la distrubicion uniforme : ")
 		else:
 			if distributions[distribution] == 2:
-				normal_param_1 = input("ingrese el primer parametro para la distribucion normal : ")
-				normal_param_2 = input("ingrese el segundo parametro para la distrubicion normal : ")
+				normal_param_1[distribution] = input("ingrese el primer parametro para la distribucion normal : ")
+				normal_param_2[distribution] = input("ingrese el segundo parametro para la distrubicion normal : ")
 			else:
 				if distributions[distribution] == 3: 
-					exponential_param = input("ingrese el parametro para la distrubucion exponencial : ")
+					exponential_param[distribution] = input("ingrese el parametro para la distrubucion exponencial : ")
 				else:
-					convolution_param_1 = input("ingrese el primer parametro para la distribucion convolucion")
-					convolution_param_2 = input("ingrese el segundo parametro para la distribucion convolucion")
+					convolution_param_1[distribution] = input("ingrese el primer parametro para la distribucion convolucion")
+					convolution_param_2[distribution] = input("ingrese el segundo parametro para la distribucion convolucion")
 		distribution = distribution + 1
 	
     

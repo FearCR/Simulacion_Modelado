@@ -70,6 +70,15 @@ def funcionDensidad(funcion,a,b):
 
 
 def generate_distribution(index_distribution):
+	global distributions
+	global uniform_param_1
+	global uniform_param_2
+	global normal_param_1
+	global normal_param_2
+	global exponential_param
+	global convolution_param_1
+	global convolution_param_2
+	
 	if distributions[index_distribution] == 1:
 		return uniforme(uniform_param_1[index_distribution],uniform_param_2[index_distribution])
 	else:

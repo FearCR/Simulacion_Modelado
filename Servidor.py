@@ -1,10 +1,13 @@
+from queue import Queue
+
 class servidor:
     # Inicializador, hay que agregar una variable para cada parte
     def __init__(self):
         self.TiempoOcupado=0
         self.TiempoDesocupado = 0
         self.ocupado=False
-        self.colaMascarilla=[]
+        self.colaMascarilla=Queue()
+        self.mascarillaSiendoAtendida = None
 
 
     def setTiempoOcupado(self,tiempo):
@@ -26,7 +29,7 @@ class servidor:
         return self.ocupado
 
     def encolarMascarrilla(self,mascarilla):
-        self.colaMascarilla.append(mascarilla)
+        self.colaMascarilla.put(mascarilla)
 
     def desencolarMascarrilla(self):
-        return self.colaMascarilla.pop()
+        return self.colaMascarilla.get()

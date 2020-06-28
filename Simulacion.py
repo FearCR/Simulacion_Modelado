@@ -1,7 +1,8 @@
 from random import random
 from random import randrange
 import math
-import Mascarilla
+import Mascarilla as mask
+import Servidor as server
 
 MAX_VALUE = 999999999
 TIME_TO_FINISH = 5000+120
@@ -103,18 +104,11 @@ def event_one():
     if s1_server1 == False:
         s1_server1 = True
         d2 = generate_distribution(1)
-        #-------------------------------------------------------------
-        mascarilla = Mascarilla.mask()
-        mascarilla.set_initial_clock(clock)
-        mascarilla.set_clock_next_event(clock + d2)
-        mascarilla.print_m()
-        #events[3][0] = mascarilla
-        #-------------------------------------------------------------
         events[3][0] = clock + d2
     else:
         queue_s1 = queue_s1 + 1
-        d1 = generate_distribution(0)
-        events[0][0] = clock + d1
+	d1 = generate_distribution(0)
+	events[0][0] = clock + d1
         return
 
 #llegan 2 mascarillas de la seccion 2 servidor1

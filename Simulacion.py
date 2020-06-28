@@ -18,23 +18,28 @@ tiempoTrabajador3=0
 paquetesListos=0
 mascarillasDesechadas=0
 events = [[MAX_VALUE],[],[],[MAX_VALUE],[],[MAX_VALUE],[MAX_VALUE]]
-distributions = [-1,-1,-1,-1]
+distributions = [-1,-1,-1,-1,-1]
 
 
 #parametros uniforme
-uniform_param_1 = [0,0,0,0]
-uniform_param_2 = [0,0,0,0]
+uniform_param_1 = [0,0,0,0,0]
+uniform_param_2 = [0,0,0,0,0]
 
 #parametros normal
-normal_param_1 = [0,0,0,0]
-normal_param_2 = [0,0,0,0]
+normal_param_1 = [0,0,0,0,0]
+normal_param_2 = [0,0,0,0,0]
 
 #parametros exponencial
-exponential_param = [0,0,0,0]
+exponential_param = [0,0,0,0,0]
 
 #parametros convolucion
-convolution_param_1 = [0,0,0,0]
-convolution_param_2 = [0,0,0,0]
+convolution_param_1 = [0,0,0,0,0]
+convolution_param_2 = [0,0,0,0,0]
+#parametros funcionDensidad
+constanteK = [0,0,0,0,0]
+a = [0,0,0,0,0]
+b = [0,0,0,0,0]
+
 
 
 
@@ -51,7 +56,8 @@ def normal(Mu,vari):
     Z=pow(Z,1/2)
     pi=math.pi
     Z=Z*(math.cos(2*pi*r2))
-    x=(vari*Z)+Mu
+    SD = math.sqrt(vari)
+    x = (SD * Z) + Mu
     if x<0:
         x=-1*x
     return x+1
@@ -66,25 +72,34 @@ def convolucion(Mu,vari):
     for i in range(1,13):
         r = random()
         Z=Z+r
-    x = (vari * Z) + Mu
+
+    SD=math.sqrt(vari)
+    x = (SD * Z) + Mu
     return x
 
-def funcionDensidad(funcion,a,b):
-    print("por implementar")
+def funcionDensidad(constanteK,a,b):
+    r = random()
+    r=2*r
+
+    a=math.pow(a,2)
+
+    x=math.sqrt((r/constanteK)+a)
+
+    return x
+
 
 
 def generate_distribution(index_distribution):
-	if distributions[index_distribution] == 1:
-		return uniforme(uniform_param_1[index_distribution],uniform_param_2[index_distribution])
-	else:
-		if distributions[index_distribution] == 2:
-			return normal(normal_param_1[index_distribution],normal_param_2[index_distribution])
-		else:
-			if distributions[index_distribution] == 3:
-				return exponencial(exponential_param[index_distribution])
-			else:
-				return convolucion(convolution_param_1[index_distribution],convolution_param_2[index_distribution])
-	return
+        if distributions[index_distribution] == 1:
+            return uniforme(uniform_param_1[index_distribution],uniform_param_2[index_distribution])
+        elif distributions[index_distribution] == 2:
+            return normal(normal_param_1[index_distribution],normal_param_2[index_distribution])
+        elif distributions[index_distribution] == 3:
+            return exponencial(exponential_param[index_distribution])
+        elif distributions[index_distribution] == 4:
+            return convolucion(convolution_param_1[index_distribution],convolution_param_2[index_distribution])
+        elif distributions[index_distribution] == 5:
+            return funcionDensidad(constanteK[index_distribution],a[index_distribution],b[index_distribution])
 
 
 #llega mascarilla del exterior a Seccion 1
@@ -290,29 +305,42 @@ def main():
     global exponential_param
     global convolution_param_1
     global convolution_param_2
+
+    global constanteK
+    global a
+    global b
+
     data_init(3)
 
 
     distribution = 0
     d=1
-    while distribution < 4:
+    while distribution < 5:
         print("seleccione cada una de las distribuciones que desea utilizar para d"+str(d))
-        distributions[distribution] = int(input("1 : Uniforme - 2: Normal  - 3 : Exponencial - 4 : Convolucion  : \n"))
+        distributions[distribution] = int(input(
+            "1 : Uniforme - 2: Directo  - 3 : Exponencial - 4 : Convolucion  : - 5 : Funcion Densidad  :\n"))
         if distributions[distribution] == 1:
-            uniform_param_1[distribution] = int(input("ingrese el primer parametro para la distribucion uniforme : "))
-            uniform_param_2[distribution] = int(input("ingrese el segundo parametro para la distrubicion uniforme : "))
-        else:
-            if distributions[distribution] == 2:
-                normal_param_1[distribution] = int(input("ingrese el primer parametro para la distribucion normal : "))
-                normal_param_2[distribution] = int(input("ingrese el segundo parametro para la distrubicion normal : "))
-            else:
-                if distributions[distribution] == 3:
-                    exponential_param[distribution] = int(input("ingrese el parametro para la distrubucion exponencial : "))
-                else:
-                    convolution_param_1[distribution] = int(input(
-                        "ingrese el primer parametro para la distribucion convolucion"))
-                    convolution_param_2[distribution] = int(input(
-                        "ingrese el segundo parametro para la distribucion convolucion"))
+            uniform_param_1[distribution] = int(input(
+                "ingrese el valor de a "))
+            uniform_param_2[distribution] = int(input(
+                "ingrese el valor de b "))
+        elif distributions[distribution] == 2:
+                normal_param_1[distribution] = int(input("ingrese el valor de miu : "))
+                normal_param_2[distribution] = int(input("ingrese el valor de la varianza  : "))
+        elif distributions[distribution] == 3:
+                exponential_param[distribution] = int(input("ingrese el valor de lambda : "))
+        elif distributions[distribution] == 4:
+                convolution_param_1[distribution] = int(input("ingrese el valor de miu : "))
+                convolution_param_2[distribution] = int(input("ingrese el valor de la varianza  : "))
+        elif distributions[distribution] == 5:
+            constanteK[distribution]=int(input(
+                        "ingrese la constante "))
+            a[distribution] = int(input(
+                "ingrese el valor de a "))
+
+            b[distribution] = int(input(
+                "ingrese el valor de b "))
+
         distribution = distribution + 1
         d=d+1
 

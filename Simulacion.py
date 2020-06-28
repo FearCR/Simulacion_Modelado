@@ -209,7 +209,7 @@ def event_five():
     print("e5",events,clock)
     if queue_s2 >= 1:
         if s2_server1.getOcupado() == False | s2_server2.getOcupado() == False:
-            if s2_server1 == False:
+            if s2_server1.getOcupado() == False:
                 queue_s2 = queue_s2 - 1
                 d3 =generate_distribution(3)
                 events[5][0] = clock + d3

@@ -12,6 +12,9 @@ class servidor:
     def setMascarillaSiendoAtendida(self, mascarilla):
         self.mascarillaSiendoAntendida = mascarilla
 
+    def getMascarillaSiendoAtendida(self):
+        return self.mascarillaSiendoAtendida
+
     def setTiempoOcupado(self,tiempo):
         self.TiempoOcupado= self.TiempoOcupado+tiempo
 

@@ -3,6 +3,7 @@ from random import randrange
 import math
 from Mascarilla import mascarilla
 from Servidor import servidor
+from queue import Queue
 
 MAX_VALUE = 999999999
 TIME_TO_FINISH = 500
@@ -24,6 +25,9 @@ paquetesListos=0
 mascarillasDesechadas=0
 events = [[MAX_VALUE],[],[],[MAX_VALUE],[],[MAX_VALUE],[MAX_VALUE]]
 distributions = [-1,-1,-1,-1]
+
+
+seccionUnoAseccionDos = Queue()
 
 
 #parametros uniforme
@@ -190,8 +194,11 @@ def event_four():
     global s1_server1
     clock = events[3][0]
     print("e4",events,clock)
+    #mask = s1_server1.getMascarillaSiendoAtendida()
     if queue_s1 > 0:
         queue_s1 = queue_s1 - 1
+        #new_mask = s1_server1.desencolarMascarrilla()
+        #s1_server1.setMascarillaSiendoAtendida(new_mask)
         d2 = generate_distribution(2)
         events[3][0] = clock + d2
     else:
@@ -200,6 +207,7 @@ def event_four():
     random_value = randrange(100)
     if random_value > 10:			#el 90% de las veces no se desecha y se programa el evento 5
         events[4].append(clock + 1)
+        #seccionUnoAseccionDos.put(mask)
     else:
         mascarillasDesechadas=mascarillasDesechadas+1
     return

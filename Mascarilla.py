@@ -1,4 +1,4 @@
-class mascarrilla:
+class mascarilla:
     def __init__(self):
         self.tiempoEncola=0
         self.tiempoDeSalida=0

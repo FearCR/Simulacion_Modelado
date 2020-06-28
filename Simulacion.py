@@ -1,8 +1,8 @@
 from random import random
 from random import randrange
 import math
+from Mascarilla import mascarilla
 from Servidor import servidor
-
 
 MAX_VALUE = 999999999
 TIME_TO_FINISH = 500
@@ -123,11 +123,16 @@ def event_one():
         tiempoTrabajador1=tiempoTrabajador1+1
         s1_server1.setOcupado(True)
         #s1_server1 = True
-        
+        mask = mascarilla()					#creo la mascarilla. 
+        mask.setTiempoEncola(0)				#el tiempo cuando se crea es 0. 
+        s1_server1.setMascarillaSiendoAtendida(mascarilla)
         d2 = generate_distribution(2)
         events[3][0] = clock + d2
         print(s1_server1.getOcupado())
     else:
+        mask = mascarilla()
+        mask.setTiempoEncola(0)
+        s1_server1.encolarMascarrilla(mask)
         queue_s1 = queue_s1 + 1
         d1 = generate_distribution(1)
         events[0][0] = clock + d1

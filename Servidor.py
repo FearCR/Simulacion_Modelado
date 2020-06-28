@@ -9,6 +9,8 @@ class servidor:
         self.colaMascarilla=Queue()
         self.mascarillaSiendoAtendida = None
 
+    def setMascarillaSiendoAtendida(self, mascarilla):
+        self.mascarillaSiendoAntendida = mascarilla
 
     def setTiempoOcupado(self,tiempo):
         self.TiempoOcupado= self.TiempoOcupado+tiempo

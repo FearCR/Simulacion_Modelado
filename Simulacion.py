@@ -154,14 +154,20 @@ def event_two():
     global queue_s1
     clock=events[1].pop(0)
     print("e2",events,clock)
+    mask_one = seccionDosAseccionUno.get()
+    mask_two = seccionDosAseccionUno.get()
     if s1_server1.getOcupado() == False:
         queue_s1 = queue_s1 + 1
+        s1_server1.encolarMascarrilla(mask_one)
+        s1_server1.setMascarillaSiendoAtendida(mask_two)
         #tiempoTrabajador2=tiempoTrabajador2+1
         s1_server1.setOcupado(True)
         d2 = generate_distribution(2)
         events[3][0] = clock + d2
         print(s1_server1)
     else:
+        s1_server1.encolarMascarrilla(mask_one)
+        s1_server1.encolarMascarrilla(mask_two)
         queue_s1 = queue_s1 + 2
         print(s1_server1)
     return

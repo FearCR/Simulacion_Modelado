@@ -29,6 +29,7 @@ distributions = [-1,-1,-1,-1]
 
 seccionUnoAseccionDos = Queue()
 
+seccion2Queue = Queue()
 
 #parametros uniforme
 uniform_param_1 = [0,0,0,0]
@@ -194,11 +195,11 @@ def event_four():
     global s1_server1
     clock = events[3][0]
     print("e4",events,clock)
-    #mask = s1_server1.getMascarillaSiendoAtendida()
+    mask = s1_server1.getMascarillaSiendoAtendida()
     if queue_s1 > 0:
         queue_s1 = queue_s1 - 1
-        #new_mask = s1_server1.desencolarMascarrilla()
-        #s1_server1.setMascarillaSiendoAtendida(new_mask)
+        new_mask = s1_server1.desencolarMascarrilla()
+        s1_server1.setMascarillaSiendoAtendida(new_mask)
         d2 = generate_distribution(2)
         events[3][0] = clock + d2
     else:
@@ -207,7 +208,7 @@ def event_four():
     random_value = randrange(100)
     if random_value > 10:			#el 90% de las veces no se desecha y se programa el evento 5
         events[4].append(clock + 1)
-        #seccionUnoAseccionDos.put(mask)
+        seccionUnoAseccionDos.put(mask)
     else:
         mascarillasDesechadas=mascarillasDesechadas+1
     return
@@ -223,20 +224,32 @@ def event_five():
     print("e5",events,clock)
     if queue_s2 >= 1:
         if s2_server1.getOcupado() == False | s2_server2.getOcupado() == False:
+            mask = seccionUnoAseccionDos.get()				#no puedo tomar esta, porque puede que en la cola esten esperando ya otras antes.
+            seccion2Queue.put(mask)							#se mete a la cola. 
+            new_mask = seccion2Queue.get()				#mascarilla 1
+            new_mask2 = seccion2Queue.get()				#mascarilla 2
             if s2_server1.getOcupado() == False:
+                s2_server1.encolarMascarrilla(new_mask)		#se usa la cola del server para los que esta atendiendo. 
+                s2_server1.encolarMascarrilla(new_mask2)	#same
                 queue_s2 = queue_s2 - 1
                 d3 =generate_distribution(3)
                 events[5][0] = clock + d3
                 s2_server1.setOcupado(True)
             else:
 				#if s2_server2 == False:
+                s2_server2.encolarMascarrilla(new_mask)
+                s2_server2.encolarMascarrilla(new_mask2)
                 queue_s2 = queue_s2 - 1
                 d4 = generate_distribution(4)
                 events[6][0] = clock + d4
                 s2_server2.setOcupado(True)
         else:
+            mask = seccionUnoAseccionDos.get()
+            seccion2Queue.put(mask)
             queue_s2 = queue_s2 + 1
     else:
+        mask = seccionUnoAseccionDos.get()
+        seccion2Queue.put(mask)
         queue_s2 = queue_s2 + 1
     return
 

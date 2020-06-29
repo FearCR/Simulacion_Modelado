@@ -28,6 +28,7 @@ distributions = [-1,-1,-1,-1]
 
 
 seccionUnoAseccionDos = Queue()
+seccionDosAseccionUno = Queue()
 
 seccion2Queue = Queue()
 
@@ -265,7 +266,13 @@ def event_six():
     #s2_server1 = False
     clock = events[5][0]
     print("e6",events,clock)
+    mask_ready1 = s2_server1.desencolarMascarrilla()		#mascarillas que acaba de terminar de trabajar. 
+    mask_ready2 = s2_server1.desencolarMascarrilla()
     if queue_s2 >= 2:
+        new_mask = seccion2Queue.get()						#hay suficientes para seguir trabajando. 
+        new_mask2 = seccion2Queue.get()
+        s2_server1.encolarMascarrilla(new_mask)				#se las vuelve a poner como las mascarillas que va a trabajar. 
+        s2_server1.encolarMascarrilla(new_mask2)
         queue_s2 = queue_s2 - 2
         d3 = generate_distribution(3)
         events[5][0] = clock + d3
@@ -276,10 +283,12 @@ def event_six():
     random_value = randrange(100)
     if random_value >= 20 and random_value<75:
         events[1].append(clock + 2)
+        seccionDosAseccionUno.put(mask_ready1)				#las meto en esa lista, para que el evento 2 las pueda sacar. 
+        seccionDosAseccionUno.put(mask_ready2)
     elif random_value >= 5 and random_value<20:
         mascarillasDesechadas=mascarillasDesechadas+2
     elif random_value >= 75:
-        paquetesListos=paquetesListos+1
+        paquetesListos=paquetesListos+1		#aqui tendría que agarrar mask_ready1 y mask_ready2 y sacarle el tiempo en el sistema. y sumar a una variable global. 
     return
 
 

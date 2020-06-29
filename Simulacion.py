@@ -181,7 +181,11 @@ def event_three():
     global clock
     clock = events[2].pop(0)
     print("e3",events,clock)
+    mask_one = seccionDosAseccionUno.get()
+    mask_two = seccionDosAseccionUno.get()
     if s1_server1.getOcupado() == False:
+        s1_server1.encolarMascarrilla(mask_one)
+        s1_server1.setMascarillaSiendoAtendida(mask_two)
         tiempoTrabajador3=tiempoTrabajador3+1
         s1_server1.setOcupado(True)
         queue_s1 = queue_s1 + 1
@@ -189,6 +193,8 @@ def event_three():
         events[3][0] = clock + d2
         print(s1_server1)
     else:
+        s1_server1.encolarMascarrilla(mask_one)
+        s1_server1.encolarMascarrilla(mask_two)
         queue_s1 = queue_s1 + 2
     return
 

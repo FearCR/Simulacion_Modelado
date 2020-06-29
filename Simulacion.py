@@ -124,7 +124,8 @@ def event_one():
         s1_server1.setOcupado(True)
         #s1_server1 = True
         d2 = generate_distribution(2)
-        s1_server1.setOcupado((clock + d2))
+        s1_server1.setTiempoOcupado((d2))
+        print("se suma",d2)
         events[3][0] = clock + d2
         print(s1_server1.getOcupado())
     else:
@@ -145,11 +146,11 @@ def event_two():
     print("e2",events,clock)
     if s1_server1.getOcupado() == False:
         queue_s1 = queue_s1 + 1
-        #tiempoTrabajador2=tiempoTrabajador2+1
         s1_server1.setOcupado(True)
         d2 = generate_distribution(2)
         events[3][0] = clock + d2
-        s1_server1.setOcupado((clock + d2))
+        s1_server1.setTiempoOcupado((d2))
+        print("se suma", d2)
         print(s1_server1)
     else:
         queue_s1 = queue_s1 + 2
@@ -170,7 +171,8 @@ def event_three():
         queue_s1 = queue_s1 + 1
         d2 = generate_distribution(2)
         events[3][0] = clock + d2
-        s1_server1.setOcupado((clock + d2))
+        s1_server1.setTiempoOcupado((d2))
+        print("se suma", d2)
         print(s1_server1)
     else:
         queue_s1 = queue_s1 + 2
@@ -189,7 +191,7 @@ def event_four():
     if queue_s1 > 0:
         queue_s1 = queue_s1 - 1
         d2 = generate_distribution(2)
-        s1_server1.setOcupado((clock + d2))
+        #s1_server1.setTiempoOcupado(( d2))
         events[3][0] = clock + d2
     else:
         events[3][0] = MAX_VALUE
@@ -217,14 +219,14 @@ def event_five():
                 d3 =generate_distribution(3)
                 events[5][0] = clock + d3
                 s2_server1.setOcupado(True)
-                s2_server1.setOcupado((clock + d3))
+                s2_server1.setTiempoOcupado((d3))
 
             else:
 				#if s2_server2 == False:
                 queue_s2 = queue_s2 - 1
                 d4 = generate_distribution(4)
                 events[6][0] = clock + d4
-                s2_server2.setOcupado((clock + d4))
+                s2_server2.setTiempoOcupado((d4))
                 s2_server2.setOcupado(True)
         else:
             queue_s2 = queue_s2 + 1
@@ -248,7 +250,7 @@ def event_six():
         queue_s2 = queue_s2 - 2
         d3 = generate_distribution(3)
         events[5][0] = clock + d3
-        s2_server1.setOcupado((clock + d3))
+        #s2_server1.setTiempoOcupado((d3))
     else:
         events[5][0] = MAX_VALUE
         s2_server1.setOcupado(False)
@@ -276,7 +278,7 @@ def event_seven():
         queue_s2 = queue_s2 - 2
         d4 = generate_distribution(4)
         events[6][0] = clock + d4
-        s2_server2.setOcupado((clock + d4))
+        #s2_server2.setTiempoOcupado((d4))
     else:
         events[6][0] = MAX_VALUE
         s2_server2.setOcupado(False)
@@ -382,6 +384,13 @@ def main():
 
     print("Mascarillas desechadas ",mascarillasDesechadas)
     print("Paquetes listos ", paquetesListos)
+
+
+    print("Tiempo ocuapdo s1_server1", float(s1_server1.getTiempoOcupado()/500))
+    print("Tiempo ocuapdo s2_server1", float(s2_server1.getTiempoOcupado()/500))
+    print("Tiempo ocuapdo s2_server2", float(s2_server2.getTiempoOcupado()/500))
+
+
     #print("Tiempo ocuado Trabajador 1: ",(tiempoTrabajador1/TIME_TO_FINISH))
     #print("Tiempo ocuado Trabajador 2: ",(tiempoTrabajador2/TIME_TO_FINISH))
     #print("Tiempo ocuado Trabajador 3: ",(tiempoTrabajador3/TIME_TO_FINISH))

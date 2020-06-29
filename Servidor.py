@@ -7,7 +7,13 @@ class servidor:
         self.TiempoDesocupado = 0
         self.ocupado=False
         self.colaMascarilla=Queue()
+        self.mascarillaSiendoAtendida = None
 
+    def setMascarillaSiendoAtendida(self, mascarilla):
+        self.mascarillaSiendoAntendida = mascarilla
+
+    def getMascarillaSiendoAtendida(self):
+        return self.mascarillaSiendoAtendida
 
     def setTiempoOcupado(self,tiempo):
         self.TiempoOcupado= self.TiempoOcupado+tiempo
@@ -15,11 +21,7 @@ class servidor:
     def getTiempoOcupado(self):
         return self.TiempoOcupado
 
-    def setTiempoDesocupado(self,tiempo):
-        self.TiempoDesocupado=self.TiempoDesocupado+tiempo
 
-    def getTiempoOcupado(self):
-        return self.TiempoDesocupado
 
     def setOcupado(self,ocupado):
         self.ocupado=ocupado

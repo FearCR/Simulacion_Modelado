@@ -301,7 +301,13 @@ def event_seven():
     global mascarillasDesechadas
     clock = events[6][0]
     print("e7",events,clock)
+    mask_ready1 = s2_server2.desencolarMascarrilla()
+    mask_ready2 = s2_server2.desencolarMascarrilla()
     if queue_s2 >= 2:
+        new_mask = seccion2Queue.get()
+        new_mask2 = seccion2Queue.get()
+        s2_server2.encolarMascarrilla(new_mask)
+        s2_server2.encolarMascarrilla(new_mask2)
         queue_s2 = queue_s2 - 2
         d4 = generate_distribution(4)
         events[6][0] = clock + d4
@@ -312,10 +318,12 @@ def event_seven():
     random_value = randrange(100)
     if random_value >= 15 and random_value < 40:
         events[3].append(clock + 2)
+        seccionDosAseccionUno.put(mask_ready1)
+        seccionDosAseccionUno.put(mask_ready2)
     elif random_value >= 15 and random_value < 25:
         mascarillasDesechadas=mascarillasDesechadas+2
     elif random_value>=40:
-        paquetesListos=paquetesListos+1
+        paquetesListos=paquetesListos+1								#Misma logica de seccion 6. 
     return
 
 #metodo para inicializar datos para iniciar la simulacion

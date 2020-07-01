@@ -32,6 +32,7 @@ seccionDosAseccionUno = Queue()
 
 seccion2Queue = Queue()
 
+time_masks = 0
 
 #parametros uniforme
 uniform_param_1 = [0,0,0,0]
@@ -121,6 +122,9 @@ def event_one():
     global tiempoTrabajador1
     global events
     global queue_s1
+    global seccionUnoAseccionDos
+    global seccionDosAseccionUno
+    global seccion2Queue
     clock = events[0][0]
     print("e1",events,clock)
 
@@ -132,8 +136,10 @@ def event_one():
         #s1_server1 = True
         mask = mascarilla()					#creo la mascarilla.
         mask.setTiempoEncola(0)				#el tiempo cuando se crea es 0.
-        s1_server1.setMascarillaSiendoAtendida(mascarilla)
+        mask.set_initial_clock(clock)
+        s1_server1.setMascarillaSiendoAtendida(mask)
         d2 = generate_distribution(2)
+        print("se esta imprimiendo d2 : ", d2)
         s1_server1.setTiempoOcupado((d2))
         print("se suma",d2)
         events[3][0] = clock + d2
@@ -142,6 +148,7 @@ def event_one():
         print("se encola")
         mask = mascarilla()
         mask.setTiempoEncola(0)
+        mask.set_initial_clock(clock)
         s1_server1.encolarMascarrilla(mask)
         queue_s1 = queue_s1 + 1
         d1 = generate_distribution(1)
@@ -156,6 +163,9 @@ def event_two():
     global events
     global tiempoTrabajador2
     global queue_s1
+    global seccionUnoAseccionDos
+    global seccionDosAseccionUno
+    global seccion2Queue
     clock=events[1].pop(0)
     print("e2",events,clock)
     mask_one = seccionDosAseccionUno.get()
@@ -183,6 +193,9 @@ def event_three():
     global events
     global queue_s1
     global clock
+    global seccionUnoAseccionDos
+    global seccionDosAseccionUno
+    global seccion2Queue
     clock = events[2].pop(0)
     print("e3",events,clock)
     mask_one = seccionDosAseccionUno.get()
@@ -211,6 +224,9 @@ def event_four():
     global events
     global MAX_VALUE
     global s1_server1
+    global seccionUnoAseccionDos
+    global seccionDosAseccionUno
+    global seccion2Queue
     clock = events[3][0]
     print("e4",events,clock)
     mask = s1_server1.getMascarillaSiendoAtendida()
@@ -240,6 +256,9 @@ def event_five():
     global s2_server1
     global s2_server2
     global queue_s2
+    global seccionUnoAseccionDos
+    global seccionDosAseccionUno
+    global seccion2Queue
     clock = events[4].pop(0)
     print("e5",events,clock)
     if queue_s2 >= 1:
@@ -285,6 +304,10 @@ def event_six():
     global paquetesListos
     global mascarillasDesechadas
     global clock
+    global time_masks
+    global seccionUnoAseccionDos
+    global seccionDosAseccionUno
+    global seccion2Queue
     #s2_server1 = False
     clock = events[5][0]
     print("e6",events,clock)
@@ -312,6 +335,8 @@ def event_six():
         mascarillasDesechadas=mascarillasDesechadas+2
     elif random_value >= 75:
         paquetesListos=paquetesListos+1
+        time_mask = time_masks + (clock - mask_ready1.get_initial_clock())
+        time_mask = time_masks + (clock - mask_ready2.get_initial_clock())
     return
 
 
@@ -322,6 +347,10 @@ def event_seven():
     global s2_server2
     global paquetesListos
     global mascarillasDesechadas
+    global time_masks
+    global seccionUnoAseccionDos
+    global seccionDosAseccionUno
+    global seccion2Queue
     clock = events[6][0]
     print("e7",events,clock)
     mask_ready1 = s2_server2.desencolarMascarrilla()
@@ -334,7 +363,7 @@ def event_seven():
         queue_s2 = queue_s2 - 2
         d4 = generate_distribution(4)
         events[6][0] = clock + d4
-        s2_server2.setTiempoOcupado((d4))
+        #s2_server2.setTiempoOcupado((d4))
     else:
         events[6][0] = MAX_VALUE
         s2_server2.setOcupado(False)
@@ -348,6 +377,8 @@ def event_seven():
         mascarillasDesechadas=mascarillasDesechadas+2
     elif random_value>=40:
         paquetesListos=paquetesListos+1
+        time_masks = time_masks + (clock - mask_ready1.get_initial_clock())
+        time_masks = time_masks + (clock - mask_ready2.get_initial_clock())
     return
 
 #metodo para inicializar datos para iniciar la simulacion

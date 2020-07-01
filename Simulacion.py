@@ -3,6 +3,7 @@ from random import randrange
 import math
 from Servidor import servidor
 from Mascarilla import mascarilla
+from queue import Queue
 
 MAX_VALUE = 999999999
 TIME_TO_FINISH = 500
@@ -24,6 +25,12 @@ paquetesListos=0
 mascarillasDesechadas=0
 events = [[MAX_VALUE],[],[],[MAX_VALUE],[],[MAX_VALUE],[MAX_VALUE]]
 distributions = [-1,-1,-1,-1]
+
+
+seccionUnoAseccionDos = Queue()
+seccionDosAseccionUno = Queue()
+
+seccion2Queue = Queue()
 
 
 #parametros uniforme
@@ -123,6 +130,9 @@ def event_one():
         tiempoTrabajador1=tiempoTrabajador1+1
         s1_server1.setOcupado(True)
         #s1_server1 = True
+        mask = mascarilla()					#creo la mascarilla.
+        mask.setTiempoEncola(0)				#el tiempo cuando se crea es 0.
+        s1_server1.setMascarillaSiendoAtendida(mascarilla)
         d2 = generate_distribution(2)
         s1_server1.setTiempoOcupado((d2))
         print("se suma",d2)
@@ -130,6 +140,9 @@ def event_one():
         print(s1_server1.getOcupado())
     else:
         print("se encola")
+        mask = mascarilla()
+        mask.setTiempoEncola(0)
+        s1_server1.encolarMascarrilla(mask)
         queue_s1 = queue_s1 + 1
         d1 = generate_distribution(1)
         events[0][0] = clock + d1
@@ -145,8 +158,12 @@ def event_two():
     global queue_s1
     clock=events[1].pop(0)
     print("e2",events,clock)
+    mask_one = seccionDosAseccionUno.get()
+    mask_two = seccionDosAseccionUno.get()
     if s1_server1.getOcupado() == False:
         queue_s1 = queue_s1 + 1
+        s1_server1.encolarMascarrilla(mask_one)
+        s1_server1.setMascarillaSiendoAtendida(mask_two)
         s1_server1.setOcupado(True)
         d2 = generate_distribution(2)
         events[3][0] = clock + d2
@@ -154,6 +171,8 @@ def event_two():
         print("se suma", d2)
         print(s1_server1)
     else:
+        s1_server1.encolarMascarrilla(mask_one)
+        s1_server1.encolarMascarrilla(mask_two)
         queue_s1 = queue_s1 + 2
         print(s1_server1)
     return
@@ -166,8 +185,11 @@ def event_three():
     global clock
     clock = events[2].pop(0)
     print("e3",events,clock)
+    mask_one = seccionDosAseccionUno.get()
+    mask_two = seccionDosAseccionUno.get()
     if s1_server1.getOcupado() == False:
-
+        s1_server1.encolarMascarrilla(mask_one)
+        s1_server1.setMascarillaSiendoAtendida(mask_two)
         s1_server1.setOcupado(True)
         queue_s1 = queue_s1 + 1
         d2 = generate_distribution(2)
@@ -176,6 +198,8 @@ def event_three():
         print("se suma", d2)
         print(s1_server1)
     else:
+        s1_server1.encolarMascarrilla(mask_one)
+        s1_server1.encolarMascarrilla(mask_two)
         queue_s1 = queue_s1 + 2
     return
 
@@ -189,9 +213,12 @@ def event_four():
     global s1_server1
     clock = events[3][0]
     print("e4",events,clock)
+    mask = s1_server1.getMascarillaSiendoAtendida()
     if queue_s1 > 0:
         print("se suma sigue cola")
         queue_s1 = queue_s1 - 1
+        new_mask = s1_server1.desencolarMascarrilla()
+        s1_server1.setMascarillaSiendoAtendida(new_mask)
         d2 = generate_distribution(2)
         s1_server1.setTiempoOcupado(( d2))
         events[3][0] = clock + d2
@@ -201,6 +228,7 @@ def event_four():
     random_value = randrange(100)
     if random_value > 10:			#el 90% de las veces no se desecha y se programa el evento 5
         events[4].append(clock + 1)
+        seccionUnoAseccionDos.put(mask)
     else:
         mascarillasDesechadas=mascarillasDesechadas+1
     return
@@ -216,7 +244,13 @@ def event_five():
     print("e5",events,clock)
     if queue_s2 >= 1:
         if s2_server1.getOcupado() == False | s2_server2.getOcupado() == False:
+            mask = seccionUnoAseccionDos.get()				#no puedo tomar esta, porque puede que en la cola esten esperando ya otras antes.
+            seccion2Queue.put(mask)							#se mete a la cola.
+            new_mask = seccion2Queue.get()				#mascarilla 1
+            new_mask2 = seccion2Queue.get()				#mascarilla 2
             if s2_server1.getOcupado() == False:
+                s2_server1.encolarMascarrilla(new_mask)		#se usa la cola del server para los que esta atendiendo.
+                s2_server1.encolarMascarrilla(new_mask2)	#same
                 queue_s2 = queue_s2 - 1
                 d3 =generate_distribution(3)
                 events[5][0] = clock + d3
@@ -225,14 +259,20 @@ def event_five():
 
             else:
 				#if s2_server2 == False:
+                s2_server2.encolarMascarrilla(new_mask)
+                s2_server2.encolarMascarrilla(new_mask2)
                 queue_s2 = queue_s2 - 1
                 d4 = generate_distribution(4)
                 events[6][0] = clock + d4
                 s2_server2.setTiempoOcupado((d4))
                 s2_server2.setOcupado(True)
         else:
+            mask = seccionUnoAseccionDos.get()
+            seccion2Queue.put(mask)
             queue_s2 = queue_s2 + 1
     else:
+        mask = seccionUnoAseccionDos.get()
+        seccion2Queue.put(mask)
         queue_s2 = queue_s2 + 1
     return
 
@@ -248,7 +288,13 @@ def event_six():
     #s2_server1 = False
     clock = events[5][0]
     print("e6",events,clock)
+    mask_ready1 = s2_server1.desencolarMascarrilla()		#mascarillas que acaba de terminar de trabajar.
+    mask_ready2 = s2_server1.desencolarMascarrilla()
     if queue_s2 >= 2:
+        new_mask = seccion2Queue.get()						#hay suficientes para seguir trabajando.
+        new_mask2 = seccion2Queue.get()
+        s2_server1.encolarMascarrilla(new_mask)				#se las vuelve a poner como las mascarillas que va a trabajar.
+        s2_server1.encolarMascarrilla(new_mask2)
         queue_s2 = queue_s2 - 2
         d3 = generate_distribution(3)
         events[5][0] = clock + d3
@@ -260,6 +306,8 @@ def event_six():
     random_value = randrange(100)
     if random_value >= 20 and random_value<75:
         events[1].append(clock + 2)
+        seccionDosAseccionUno.put(mask_ready1)				#las meto en esa lista, para que el evento 2 las pueda sacar.
+        seccionDosAseccionUno.put(mask_ready2)
     elif random_value >= 5 and random_value<20:
         mascarillasDesechadas=mascarillasDesechadas+2
     elif random_value >= 75:
@@ -276,11 +324,17 @@ def event_seven():
     global mascarillasDesechadas
     clock = events[6][0]
     print("e7",events,clock)
+    mask_ready1 = s2_server2.desencolarMascarrilla()
+    mask_ready2 = s2_server2.desencolarMascarrilla()
     if queue_s2 >= 2:
+        new_mask = seccion2Queue.get()
+        new_mask2 = seccion2Queue.get()
+        s2_server2.encolarMascarrilla(new_mask)
+        s2_server2.encolarMascarrilla(new_mask2)
         queue_s2 = queue_s2 - 2
         d4 = generate_distribution(4)
         events[6][0] = clock + d4
-        #s2_server2.setTiempoOcupado((d4))
+        s2_server2.setTiempoOcupado((d4))
     else:
         events[6][0] = MAX_VALUE
         s2_server2.setOcupado(False)
@@ -288,6 +342,8 @@ def event_seven():
     random_value = randrange(100)
     if random_value >= 15 and random_value < 40:
         events[3].append(clock + 2)
+        seccionDosAseccionUno.put(mask_ready1)
+        seccionDosAseccionUno.put(mask_ready2)
     elif random_value >= 15 and random_value < 25:
         mascarillasDesechadas=mascarillasDesechadas+2
     elif random_value>=40:
@@ -334,13 +390,11 @@ def main():
 
     data_init(3)
 
-
     distribution = 0
     d=1
-
     while distribution < 4:
         try:
-            print("seleccione cada una de las distribuciones que desea utilizar para d"+str(d))
+            print("seleccione cada una de las distribuciones que desea utilizar para d" + str(d))
             distributions[distribution] = int(input(
                 "1 : Uniforme - 2: Directo  - 3 : Exponencial - 4 : Convolucion  : - 5 : Funcion Densidad  :\n"))
             if distributions[distribution] == 1:
@@ -349,70 +403,68 @@ def main():
                 uniform_param_2[distribution] = int(input(
                     "ingrese el valor de b "))
                 distribution = distribution + 1
-                d=d+1
+                d = d + 1
             elif distributions[distribution] == 2:
                 normal_param_1[distribution] = int(input("ingrese el valor de miu : "))
                 normal_param_2[distribution] = int(input("ingrese el valor de la varianza  : "))
                 distribution = distribution + 1
-                d=d+1
+                d = d + 1
             elif distributions[distribution] == 3:
                 exponential_param[distribution] = int(input("ingrese el valor de lambda : "))
                 distribution = distribution + 1
-                d=d+1
+                d = d + 1
             elif distributions[distribution] == 4:
                 convolution_param_1[distribution] = int(input("ingrese el valor de miu : "))
                 convolution_param_2[distribution] = int(input("ingrese el valor de la varianza  : "))
                 distribution = distribution + 1
-                d=d+1
+                d = d + 1
             elif distributions[distribution] == 5:
-                constanteK[distribution]=int(input(
-                            "ingrese la constante "))
+                constanteK[distribution] = int(input(
+                    "ingrese la constante "))
                 a[distribution] = int(input(
                     "ingrese el valor de a "))
 
                 b[distribution] = int(input(
                     "ingrese el valor de b "))
                 distribution = distribution + 1
-                d=d+1
+                d = d + 1
             else:
                 print("entrada invalida")
         except ValueError:
-                print("entrada invalida")
+            print("entrada invalida")
 
     while clock < TIME_TO_FINISH:
         event = get_next_event(events)
         switcher = {
-			0:event_one,
-			1:event_two,
-			2:event_three,
-			3:event_four,
-			4:event_five,
-			5:event_six,
-			6:event_seven
-		}
+            0: event_one,
+            1: event_two,
+            2: event_three,
+            3: event_four,
+            4: event_five,
+            5: event_six,
+            6: event_seven
+        }
         func = switcher.get(event, "invalid event")
         func()
-        #clock=TIME_TO_FINISH
-        #print(normal(2,10))
-        #print(randrange(100))
-    #lista=[1,2,3]
+        # clock=TIME_TO_FINISH
+        # print(normal(2,10))
+        # print(randrange(100))
+        # lista=[1,2,3]
 
-    print("Mascarillas desechadas ",mascarillasDesechadas)
+    print("Mascarillas desechadas ", mascarillasDesechadas)
     print("Paquetes listos ", paquetesListos)
+
+    print("Longitud de la cola seccion 1:", s1_server1.getLongitudCola())
+    print("Longitud de la cola seccion 2:", seccion2Queue.qsize())
 
 
     print("Tiempo ocuapdo s1_server1", float(s1_server1.getTiempoOcupado()))
     print("Tiempo ocuapdo s2_server1", float(s2_server1.getTiempoOcupado()))
     print("Tiempo ocuapdo s2_server2", float(s2_server2.getTiempoOcupado()))
 
-
-    #print("Tiempo ocuado Trabajador 1: ",(tiempoTrabajador1/TIME_TO_FINISH))
-    #print("Tiempo ocuado Trabajador 2: ",(tiempoTrabajador2/TIME_TO_FINISH))
-    #print("Tiempo ocuado Trabajador 3: ",(tiempoTrabajador3/TIME_TO_FINISH))
-
-
-
-
+    # print("Tiempo ocuado Trabajador 1: ",(tiempoTrabajador1/TIME_TO_FINISH))
+    # print("Tiempo ocuado Trabajador 2: ",(tiempoTrabajador2/TIME_TO_FINISH))
+    # print("Tiempo ocuado Trabajador 3: ",(tiempoTrabajador3/TIME_TO_FINISH))
 
 if __name__ == "__main__":
     main()

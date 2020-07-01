@@ -26,6 +26,10 @@ class servidor:
     def setOcupado(self,ocupado):
         self.ocupado=ocupado
 
+
+    def getLongitudCola(self):
+        return self.colaMascarilla.qsize()
+
     def getOcupado(self):
         return self.ocupado
 

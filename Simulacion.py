@@ -256,44 +256,50 @@ def event_five():
     global s2_server1
     global s2_server2
     global queue_s2
-    global seccionUnoAseccionDos
-    global seccionDosAseccionUno
-    global seccion2Queue
     clock = events[4].pop(0)
     print("e5",events,clock)
     if queue_s2 >= 1:
-        if s2_server1.getOcupado() == False | s2_server2.getOcupado() == False:
+			#mascarilla 2
+        print("---------------------------OCUPADO S2S1?",s2_server1.getOcupado())
+        if s2_server1.getOcupado() == False:
+            print("entra a s2.server1")
             mask = seccionUnoAseccionDos.get()				#no puedo tomar esta, porque puede que en la cola esten esperando ya otras antes.
             seccion2Queue.put(mask)							#se mete a la cola.
             new_mask = seccion2Queue.get()				#mascarilla 1
             new_mask2 = seccion2Queue.get()				#mascarilla 2
-            if s2_server1.getOcupado() == False:
-                s2_server1.encolarMascarrilla(new_mask)		#se usa la cola del server para los que esta atendiendo.
-                s2_server1.encolarMascarrilla(new_mask2)	#same
-                queue_s2 = queue_s2 - 1
-                d3 =generate_distribution(3)
-                events[5][0] = clock + d3
-                s2_server1.setOcupado(True)
-                s2_server1.setTiempoOcupado((d3))
+            s2_server1.encolarMascarrilla(new_mask)		#se usa la cola del server para los que esta atendiendo.
+            s2_server1.encolarMascarrilla(new_mask2)	#same
+            queue_s2 = queue_s2 - 1
+            d3 =generate_distribution(2)
+            events[5][0] = clock + d3
+            s2_server1.setOcupado(True)
+            s2_server1.setTiempoOcupado((d3))
 
-            else:
-				#if s2_server2 == False:
-                s2_server2.encolarMascarrilla(new_mask)
-                s2_server2.encolarMascarrilla(new_mask2)
-                queue_s2 = queue_s2 - 1
-                d4 = generate_distribution(4)
-                events[6][0] = clock + d4
-                s2_server2.setTiempoOcupado((d4))
-                s2_server2.setOcupado(True)
+        elif s2_server2.getOcupado() == False:
+            mask = seccionUnoAseccionDos.get()				#no puedo tomar esta, porque puede que en la cola esten esperando ya otras antes.
+            seccion2Queue.put(mask)							#se mete a la cola.
+            new_mask = seccion2Queue.get()				#mascarilla 1
+            new_mask2 = seccion2Queue.get()				#mascarilla 2
+			#
+            s2_server2.encolarMascarrilla(new_mask)
+            s2_server2.encolarMascarrilla(new_mask2)
+            queue_s2 = queue_s2 - 1
+            d4 = generate_distribution(3)
+            events[6][0] = clock + d4
+            s2_server2.setTiempoOcupado((d4))
+            s2_server2.setOcupado(True)
         else:
             mask = seccionUnoAseccionDos.get()
             seccion2Queue.put(mask)
             queue_s2 = queue_s2 + 1
+            print("se encola S2")
     else:
         mask = seccionUnoAseccionDos.get()
         seccion2Queue.put(mask)
         queue_s2 = queue_s2 + 1
+        print("se encola S2")
     return
+
 
 #se desocupa el servidor 1 de la seccion 2
 def event_six():

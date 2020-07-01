@@ -137,9 +137,8 @@ def event_one():
         mask = mascarilla()					#creo la mascarilla.
         mask.setTiempoEncola(0)				#el tiempo cuando se crea es 0.
         mask.set_initial_clock(clock)
-        print("ahhh: clock : ", mask.get_initial_clock())
         s1_server1.setMascarillaSiendoAtendida(mask)
-        d2 = generate_distribution(2)
+        d2 = generate_distribution(1)
         print("se esta imprimiendo d2 : ", d2)
         s1_server1.setTiempoOcupado((d2))
         print("se suma",d2)
@@ -150,13 +149,12 @@ def event_one():
         mask = mascarilla()
         mask.setTiempoEncola(0)
         mask.set_initial_clock(clock)
-        print("ahhh: clock : ", mask.get_initial_clock())
         s1_server1.encolarMascarrilla(mask)
         queue_s1 = queue_s1 + 1
-        d1 = generate_distribution(1)
-        events[0][0] = clock + d1
-        print(s1_server1.getOcupado())
-        return
+    d1 = generate_distribution(0)
+    events[0][0] = clock + d1
+    print(s1_server1.getOcupado())
+    return
 
 #llegan 2 mascarillas de la seccion 2 servidor1
 def event_two():
@@ -177,7 +175,7 @@ def event_two():
         s1_server1.encolarMascarrilla(mask_one)
         s1_server1.setMascarillaSiendoAtendida(mask_two)
         s1_server1.setOcupado(True)
-        d2 = generate_distribution(2)
+        d2 = generate_distribution(1)
         events[3][0] = clock + d2
         s1_server1.setTiempoOcupado((d2))
         print("se suma", d2)
@@ -207,7 +205,7 @@ def event_three():
         s1_server1.setMascarillaSiendoAtendida(mask_two)
         s1_server1.setOcupado(True)
         queue_s1 = queue_s1 + 1
-        d2 = generate_distribution(2)
+        d2 = generate_distribution(1)
         events[3][0] = clock + d2
         s1_server1.setTiempoOcupado((d2))
         print("se suma", d2)
@@ -237,7 +235,7 @@ def event_four():
         queue_s1 = queue_s1 - 1
         new_mask = s1_server1.desencolarMascarrilla()
         s1_server1.setMascarillaSiendoAtendida(new_mask)
-        d2 = generate_distribution(2)
+        d2 = generate_distribution(1)
         s1_server1.setTiempoOcupado(( d2))
         events[3][0] = clock + d2
     else:
@@ -316,6 +314,7 @@ def event_six():
     global seccionUnoAseccionDos
     global seccionDosAseccionUno
     global seccion2Queue
+    global time_masks
     #s2_server1 = False
     clock = events[5][0]
     print("e6",events,clock)
@@ -327,7 +326,7 @@ def event_six():
         s2_server1.encolarMascarrilla(new_mask)				#se las vuelve a poner como las mascarillas que va a trabajar.
         s2_server1.encolarMascarrilla(new_mask2)
         queue_s2 = queue_s2 - 2
-        d3 = generate_distribution(3)
+        d3 = generate_distribution(2)
         events[5][0] = clock + d3
         #s2_server1.setTiempoOcupado((d3))
     else:
@@ -343,9 +342,8 @@ def event_six():
         mascarillasDesechadas=mascarillasDesechadas+2
     elif random_value >= 75:
         paquetesListos=paquetesListos+1
-        time_mask = time_masks + (clock - mask_ready1.get_initial_clock())
-        time_mask = time_masks + (clock - mask_ready2.get_initial_clock())
-        print("el clock es : ", clock, "el inicial clock es : ", mask_ready1.get_initial_clock(), " y es : ", mask_ready2.get_initial_clock())
+        time_masks = time_masks + (clock - mask_ready1.get_initial_clock())
+        time_masks = time_masks + (clock - mask_ready2.get_initial_clock())
     return
 
 
@@ -360,6 +358,7 @@ def event_seven():
     global seccionUnoAseccionDos
     global seccionDosAseccionUno
     global seccion2Queue
+    global time_masks
     clock = events[6][0]
     print("e7",events,clock)
     mask_ready1 = s2_server2.desencolarMascarrilla()
@@ -370,7 +369,7 @@ def event_seven():
         s2_server2.encolarMascarrilla(new_mask)
         s2_server2.encolarMascarrilla(new_mask2)
         queue_s2 = queue_s2 - 2
-        d4 = generate_distribution(4)
+        d4 = generate_distribution(3)
         events[6][0] = clock + d4
         #s2_server2.setTiempoOcupado((d4))
     else:
@@ -498,7 +497,7 @@ def main():
     print("Longitud de la cola seccion 1:", s1_server1.getLongitudCola())
     print("Longitud de la cola seccion 2:", seccion2Queue.qsize())
 
-    print("el tiempo que pasaron las mascarillas en el sistema es de : ", time_masks)
+    print("tiempo de las mascarillas en el sistema : ", time_masks)
 
     print("Tiempo ocuapdo s1_server1", float(s1_server1.getTiempoOcupado()))
     print("Tiempo ocuapdo s2_server1", float(s2_server1.getTiempoOcupado()))

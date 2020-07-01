@@ -498,6 +498,7 @@ def main():
     print("Longitud de la cola seccion 2:", seccion2Queue.qsize())
 
     print("tiempo de las mascarillas en el sistema : ", time_masks)
+    print("tiempo promedio que dura una mascarilla en el sistema : ", time_masks/(paquetesListos*2))
 
     print("Tiempo ocuapdo s1_server1", float(s1_server1.getTiempoOcupado()))
     print("Tiempo ocuapdo s2_server1", float(s2_server1.getTiempoOcupado()))

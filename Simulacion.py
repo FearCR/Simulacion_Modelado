@@ -129,6 +129,7 @@ def event_one():
         events[3][0] = clock + d2
         print(s1_server1.getOcupado())
     else:
+        print("se encola")
         queue_s1 = queue_s1 + 1
         d1 = generate_distribution(1)
         events[0][0] = clock + d1
@@ -189,9 +190,10 @@ def event_four():
     clock = events[3][0]
     print("e4",events,clock)
     if queue_s1 > 0:
+        print("se suma sigue cola")
         queue_s1 = queue_s1 - 1
         d2 = generate_distribution(2)
-        #s1_server1.setTiempoOcupado(( d2))
+        s1_server1.setTiempoOcupado(( d2))
         events[3][0] = clock + d2
     else:
         events[3][0] = MAX_VALUE
@@ -386,9 +388,9 @@ def main():
     print("Paquetes listos ", paquetesListos)
 
 
-    print("Tiempo ocuapdo s1_server1", float(s1_server1.getTiempoOcupado()/500))
-    print("Tiempo ocuapdo s2_server1", float(s2_server1.getTiempoOcupado()/500))
-    print("Tiempo ocuapdo s2_server2", float(s2_server2.getTiempoOcupado()/500))
+    print("Tiempo ocuapdo s1_server1", float(s1_server1.getTiempoOcupado()))
+    print("Tiempo ocuapdo s2_server1", float(s2_server1.getTiempoOcupado()))
+    print("Tiempo ocuapdo s2_server2", float(s2_server2.getTiempoOcupado()))
 
 
     #print("Tiempo ocuado Trabajador 1: ",(tiempoTrabajador1/TIME_TO_FINISH))

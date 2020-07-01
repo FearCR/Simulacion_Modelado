@@ -337,42 +337,45 @@ def main():
 
     distribution = 0
     d=1
+
     while distribution < 4:
-        print("seleccione cada una de las distribuciones que desea utilizar para d"+str(d))
-        distributions[distribution] = int(input(
-            "1 : Uniforme - 2: Directo  - 3 : Exponencial - 4 : Convolucion  : - 5 : Funcion Densidad  :\n"))
-        if distributions[distribution] == 1:
-            uniform_param_1[distribution] = int(input(
-                "ingrese el valor de a "))
-            uniform_param_2[distribution] = int(input(
-                "ingrese el valor de b "))
-            distribution = distribution + 1
-            d=d+1
-        elif distributions[distribution] == 2:
-            normal_param_1[distribution] = int(input("ingrese el valor de miu : "))
-            normal_param_2[distribution] = int(input("ingrese el valor de la varianza  : "))
-            distribution = distribution + 1
-            d=d+1
-        elif distributions[distribution] == 3:
-            exponential_param[distribution] = int(input("ingrese el valor de lambda : "))
-            distribution = distribution + 1
-            d=d+1
-        elif distributions[distribution] == 4:
-            convolution_param_1[distribution] = int(input("ingrese el valor de miu : "))
-            convolution_param_2[distribution] = int(input("ingrese el valor de la varianza  : "))
-        elif distributions[distribution] == 5:
-            constanteK[distribution]=int(input(
-                        "ingrese la constante "))
-            a[distribution] = int(input(
-                "ingrese el valor de a "))
+        try:
+            print("seleccione cada una de las distribuciones que desea utilizar para d"+str(d))
+            distributions[distribution] = int(input(
+                "1 : Uniforme - 2: Directo  - 3 : Exponencial - 4 : Convolucion  : - 5 : Funcion Densidad  :\n"))
+            if distributions[distribution] == 1:
+                uniform_param_1[distribution] = int(input(
+                    "ingrese el valor de a "))
+                uniform_param_2[distribution] = int(input(
+                    "ingrese el valor de b "))
+                distribution = distribution + 1
+                d=d+1
+            elif distributions[distribution] == 2:
+                normal_param_1[distribution] = int(input("ingrese el valor de miu : "))
+                normal_param_2[distribution] = int(input("ingrese el valor de la varianza  : "))
+                distribution = distribution + 1
+                d=d+1
+            elif distributions[distribution] == 3:
+                exponential_param[distribution] = int(input("ingrese el valor de lambda : "))
+                distribution = distribution + 1
+                d=d+1
+            elif distributions[distribution] == 4:
+                convolution_param_1[distribution] = int(input("ingrese el valor de miu : "))
+                convolution_param_2[distribution] = int(input("ingrese el valor de la varianza  : "))
+            elif distributions[distribution] == 5:
+                constanteK[distribution]=int(input(
+                            "ingrese la constante "))
+                a[distribution] = int(input(
+                    "ingrese el valor de a "))
 
-            b[distribution] = int(input(
-                "ingrese el valor de b "))
-            distribution = distribution + 1
-            d=d+1
-        else:
-            print("entrada invalida")
-
+                b[distribution] = int(input(
+                    "ingrese el valor de b "))
+                distribution = distribution + 1
+                d=d+1
+            else:
+                print("entrada invalida")
+        except ValueError:
+                print("entrada invalida")
 
     while clock < TIME_TO_FINISH:
         event = get_next_event(events)

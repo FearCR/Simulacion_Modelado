@@ -362,6 +362,8 @@ def main():
             elif distributions[distribution] == 4:
                 convolution_param_1[distribution] = int(input("ingrese el valor de miu : "))
                 convolution_param_2[distribution] = int(input("ingrese el valor de la varianza  : "))
+                distribution = distribution + 1
+                d=d+1
             elif distributions[distribution] == 5:
                 constanteK[distribution]=int(input(
                             "ingrese la constante "))

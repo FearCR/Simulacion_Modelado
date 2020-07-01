@@ -138,7 +138,7 @@ def event_one():
         mask.setTiempoEncola(0)				#el tiempo cuando se crea es 0.
         mask.set_initial_clock(clock)
         s1_server1.setMascarillaSiendoAtendida(mask)
-        d2 = generate_distribution(2)
+        d2 = generate_distribution(1)
         print("se esta imprimiendo d2 : ", d2)
         s1_server1.setTiempoOcupado((d2))
         print("se suma",d2)
@@ -151,10 +151,10 @@ def event_one():
         mask.set_initial_clock(clock)
         s1_server1.encolarMascarrilla(mask)
         queue_s1 = queue_s1 + 1
-        d1 = generate_distribution(1)
-        events[0][0] = clock + d1
-        print(s1_server1.getOcupado())
-        return
+    d1 = generate_distribution(0)
+    events[0][0] = clock + d1
+    print(s1_server1.getOcupado())
+    return
 
 #llegan 2 mascarillas de la seccion 2 servidor1
 def event_two():
@@ -175,7 +175,7 @@ def event_two():
         s1_server1.encolarMascarrilla(mask_one)
         s1_server1.setMascarillaSiendoAtendida(mask_two)
         s1_server1.setOcupado(True)
-        d2 = generate_distribution(2)
+        d2 = generate_distribution(1)
         events[3][0] = clock + d2
         s1_server1.setTiempoOcupado((d2))
         print("se suma", d2)
@@ -205,7 +205,7 @@ def event_three():
         s1_server1.setMascarillaSiendoAtendida(mask_two)
         s1_server1.setOcupado(True)
         queue_s1 = queue_s1 + 1
-        d2 = generate_distribution(2)
+        d2 = generate_distribution(1)
         events[3][0] = clock + d2
         s1_server1.setTiempoOcupado((d2))
         print("se suma", d2)
@@ -235,7 +235,7 @@ def event_four():
         queue_s1 = queue_s1 - 1
         new_mask = s1_server1.desencolarMascarrilla()
         s1_server1.setMascarillaSiendoAtendida(new_mask)
-        d2 = generate_distribution(2)
+        d2 = generate_distribution(1)
         s1_server1.setTiempoOcupado(( d2))
         events[3][0] = clock + d2
     else:
@@ -325,7 +325,7 @@ def event_six():
         s2_server1.encolarMascarrilla(new_mask)				#se las vuelve a poner como las mascarillas que va a trabajar.
         s2_server1.encolarMascarrilla(new_mask2)
         queue_s2 = queue_s2 - 2
-        d3 = generate_distribution(3)
+        d3 = generate_distribution(2)
         events[5][0] = clock + d3
         #s2_server1.setTiempoOcupado((d3))
     else:
@@ -367,7 +367,7 @@ def event_seven():
         s2_server2.encolarMascarrilla(new_mask)
         s2_server2.encolarMascarrilla(new_mask2)
         queue_s2 = queue_s2 - 2
-        d4 = generate_distribution(4)
+        d4 = generate_distribution(3)
         events[6][0] = clock + d4
         #s2_server2.setTiempoOcupado((d4))
     else:

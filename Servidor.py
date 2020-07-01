@@ -1,4 +1,5 @@
 from queue import Queue
+from Mascarilla import mascarilla
 
 class servidor:
     # Inicializador, hay que agregar una variable para cada parte
@@ -7,10 +8,10 @@ class servidor:
         self.TiempoDesocupado = 0
         self.ocupado=False
         self.colaMascarilla=Queue()
-        self.mascarillaSiendoAtendida = None
+        self.mascarillaSiendoAtendida = mascarilla()
 
     def setMascarillaSiendoAtendida(self, mascarilla):
-        self.mascarillaSiendoAntendida = mascarilla
+        self.mascarillaSiendoAtendida = mascarilla
 
     def getMascarillaSiendoAtendida(self):
         return self.mascarillaSiendoAtendida
@@ -21,14 +22,14 @@ class servidor:
     def getTiempoOcupado(self):
         return self.TiempoOcupado
 
-    def setTiempoDesocupado(self,tiempo):
-        self.TiempoDesocupado=self.TiempoDesocupado+tiempo
 
-    def getTiempoOcupado(self):
-        return self.TiempoDesocupado
 
     def setOcupado(self,ocupado):
         self.ocupado=ocupado
+
+
+    def getLongitudCola(self):
+        return self.colaMascarilla.qsize()
 
     def getOcupado(self):
         return self.ocupado

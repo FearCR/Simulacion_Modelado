@@ -346,14 +346,20 @@ def main():
                 "ingrese el valor de a "))
             uniform_param_2[distribution] = int(input(
                 "ingrese el valor de b "))
+            distribution = distribution + 1
+            d=d+1
         elif distributions[distribution] == 2:
-                normal_param_1[distribution] = int(input("ingrese el valor de miu : "))
-                normal_param_2[distribution] = int(input("ingrese el valor de la varianza  : "))
+            normal_param_1[distribution] = int(input("ingrese el valor de miu : "))
+            normal_param_2[distribution] = int(input("ingrese el valor de la varianza  : "))
+            distribution = distribution + 1
+            d=d+1
         elif distributions[distribution] == 3:
-                exponential_param[distribution] = int(input("ingrese el valor de lambda : "))
+            exponential_param[distribution] = int(input("ingrese el valor de lambda : "))
+            distribution = distribution + 1
+            d=d+1
         elif distributions[distribution] == 4:
-                convolution_param_1[distribution] = int(input("ingrese el valor de miu : "))
-                convolution_param_2[distribution] = int(input("ingrese el valor de la varianza  : "))
+            convolution_param_1[distribution] = int(input("ingrese el valor de miu : "))
+            convolution_param_2[distribution] = int(input("ingrese el valor de la varianza  : "))
         elif distributions[distribution] == 5:
             constanteK[distribution]=int(input(
                         "ingrese la constante "))
@@ -362,9 +368,11 @@ def main():
 
             b[distribution] = int(input(
                 "ingrese el valor de b "))
+            distribution = distribution + 1
+            d=d+1
+        else:
+            print("entrada invalida")
 
-        distribution = distribution + 1
-        d=d+1
 
     while clock < TIME_TO_FINISH:
         event = get_next_event(events)

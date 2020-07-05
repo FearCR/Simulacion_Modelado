@@ -55,7 +55,7 @@ constanteK = [0,0,0,0]
 a = [0,0,0,0]
 b = [0,0,0,0]
 
-
+totalMascarillasIngresan=0
 
 
 #distribuciones
@@ -127,9 +127,11 @@ def event_one():
     global seccionUnoAseccionDos
     global seccionDosAseccionUno
     global seccion2Queue
+    global totalMascarillasIngresan
     clock = events[0][0]
     #print("e1",events,clock)
-
+    if clock > 120:
+        totalMascarillasIngresan=totalMascarillasIngresan+1
 
     if s1_server1.getOcupado() == False:
 
@@ -442,7 +444,7 @@ def main():
     global exponential_param
     global convolution_param_1
     global convolution_param_2
-
+    global totalMascarillasIngresan
     global constanteK
     global a
     global b
@@ -522,9 +524,21 @@ def main():
 
     print("tiempo promedio que dura una mascarilla en el sistema antes de estar lista :", time_masks / (paquetesListos * 2))
 
-    print("Tiempo ocuapdo s1_server1", float(s1_server1.getTiempoOcupado()))
-    print("Tiempo ocuapdo s2_server1", float(s2_server1.getTiempoOcupado()))
-    print("Tiempo ocuapdo s2_server2", float(s2_server2.getTiempoOcupado()))
+    print("Tiempo ocupado s1_server1", float(s1_server1.getTiempoOcupado()))
+    print("Tiempo ocupado s2_server1", float(s2_server1.getTiempoOcupado()))
+    print("Tiempo ocupado s2_server2", float(s2_server2.getTiempoOcupado()))
+
+    print("Porcentaje ocupado s1_server1", 100*(float(s1_server1.getTiempoOcupado()/(TIME_TO_FINISH - 120))),"%")
+    print("Porcentaje ocupado s2_server1", 100*(float(s2_server1.getTiempoOcupado()/(TIME_TO_FINISH - 120))),"%")
+    print("Porcentaje ocupado s2_server2", 100*(float(s2_server2.getTiempoOcupado()/(TIME_TO_FINISH - 120))),"%")
+
+
+    equi1=totalMascarillasIngresan/(TIME_TO_FINISH-120)
+
+    equi2 = ((paquetesListos * 2)+mascarillasDesechadas) / (TIME_TO_FINISH - 120)
+
+    print("Equilibrio",(equi1/equi2))
+
 
     # print("Tiempo ocuado Trabajador 1: ",(tiempoTrabajador1/TIME_TO_FINISH))
     # print("Tiempo ocuado Trabajador 2: ",(tiempoTrabajador2/TIME_TO_FINISH))

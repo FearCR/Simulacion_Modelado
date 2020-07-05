@@ -341,8 +341,8 @@ def event_six():
         mascarillasDesechadas=mascarillasDesechadas+2
     elif random_value >= 75:
         paquetesListos=paquetesListos+1
-        time_mask = time_masks + (clock - mask_ready1.get_initial_clock())
-        time_mask = time_masks + (clock - mask_ready2.get_initial_clock())
+        time_masks = time_masks + (clock - mask_ready1.get_initial_clock())
+        time_masks = time_masks + (clock - mask_ready2.get_initial_clock())
     return
 
 
@@ -494,6 +494,8 @@ def main():
     print("Longitud de la cola seccion 1:", s1_server1.getLongitudCola())
     print("Longitud de la cola seccion 2:", seccion2Queue.qsize())
 
+    print("tiempo de las mascarillas en el sistema : ", time_masks)
+    print("tiempo promedio que dura una mascarilla en el sistema : ", time_masks / (paquetesListos * 2))
 
     print("Tiempo ocuapdo s1_server1", float(s1_server1.getTiempoOcupado()))
     print("Tiempo ocuapdo s2_server1", float(s2_server1.getTiempoOcupado()))

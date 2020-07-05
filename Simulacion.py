@@ -33,6 +33,8 @@ seccionDosAseccionUno = Queue()
 seccion2Queue = Queue()
 
 time_masks = 0
+time_masks_Desechadas = 0
+
 
 #parametros uniforme
 uniform_param_1 = [0,0,0,0]
@@ -126,7 +128,7 @@ def event_one():
     global seccionDosAseccionUno
     global seccion2Queue
     clock = events[0][0]
-    print("e1",events,clock)
+    #print("e1",events,clock)
 
 
     if s1_server1.getOcupado() == False:
@@ -139,13 +141,14 @@ def event_one():
         mask.set_initial_clock(clock)
         s1_server1.setMascarillaSiendoAtendida(mask)
         d2 = generate_distribution(1)
-        print("se esta imprimiendo d2 : ", d2)
-        s1_server1.setTiempoOcupado((d2))
-        print("se suma",d2)
+        #print("se esta imprimiendo d2 : ", d2)
+        if clock > 120:
+            s1_server1.setTiempoOcupado((d2))
+        #print("se suma",d2)
         events[3][0] = clock + d2
-        print(s1_server1.getOcupado())
+        #print(s1_server1.getOcupado())
     else:
-        print("se encola")
+        #print("se encola")
         mask = mascarilla()
         mask.setTiempoEncola(0)
         mask.set_initial_clock(clock)
@@ -153,7 +156,7 @@ def event_one():
         queue_s1 = queue_s1 + 1
     d1 = generate_distribution(0)
     events[0][0] = clock + d1
-    print(s1_server1.getOcupado())
+    #print(s1_server1.getOcupado())
     return
 
 #llegan 2 mascarillas de la seccion 2 servidor1
@@ -167,7 +170,7 @@ def event_two():
     global seccionDosAseccionUno
     global seccion2Queue
     clock=events[1].pop(0)
-    print("e2",events,clock)
+    #print("e2",events,clock)
     mask_one = seccionDosAseccionUno.get()
     mask_two = seccionDosAseccionUno.get()
     if s1_server1.getOcupado() == False:
@@ -177,14 +180,15 @@ def event_two():
         s1_server1.setOcupado(True)
         d2 = generate_distribution(1)
         events[3][0] = clock + d2
-        s1_server1.setTiempoOcupado((d2))
-        print("se suma", d2)
-        print(s1_server1)
+        if clock > 120:
+            s1_server1.setTiempoOcupado((d2))
+        #print("se suma", d2)
+        #print(s1_server1)
     else:
         s1_server1.encolarMascarrilla(mask_one)
         s1_server1.encolarMascarrilla(mask_two)
         queue_s1 = queue_s1 + 2
-        print(s1_server1)
+        #print(s1_server1)
     return
 
 #llegan 2 mascarillas de la seccion 2 servidor2
@@ -197,7 +201,7 @@ def event_three():
     global seccionDosAseccionUno
     global seccion2Queue
     clock = events[2].pop(0)
-    print("e3",events,clock)
+    #print("e3",events,clock)
     mask_one = seccionDosAseccionUno.get()
     mask_two = seccionDosAseccionUno.get()
     if s1_server1.getOcupado() == False:
@@ -207,9 +211,10 @@ def event_three():
         queue_s1 = queue_s1 + 1
         d2 = generate_distribution(1)
         events[3][0] = clock + d2
-        s1_server1.setTiempoOcupado((d2))
-        print("se suma", d2)
-        print(s1_server1)
+        if clock > 120:
+            s1_server1.setTiempoOcupado((d2))
+        #print("se suma", d2)
+        #print(s1_server1)
     else:
         s1_server1.encolarMascarrilla(mask_one)
         s1_server1.encolarMascarrilla(mask_two)
@@ -227,16 +232,18 @@ def event_four():
     global seccionUnoAseccionDos
     global seccionDosAseccionUno
     global seccion2Queue
+    global time_masks_Desechadas
     clock = events[3][0]
-    print("e4",events,clock)
+    #print("e4",events,clock)
     mask = s1_server1.getMascarillaSiendoAtendida()
     if queue_s1 > 0:
-        print("se suma sigue cola")
+        #print("se suma sigue cola")
         queue_s1 = queue_s1 - 1
         new_mask = s1_server1.desencolarMascarrilla()
         s1_server1.setMascarillaSiendoAtendida(new_mask)
         d2 = generate_distribution(1)
-        s1_server1.setTiempoOcupado(( d2))
+        if clock > 120:
+            s1_server1.setTiempoOcupado(( d2))
         events[3][0] = clock + d2
     else:
         events[3][0] = MAX_VALUE
@@ -246,7 +253,9 @@ def event_four():
         events[4].append(clock + 1)
         seccionUnoAseccionDos.put(mask)
     else:
-        mascarillasDesechadas=mascarillasDesechadas+1
+        if clock>120:
+            mascarillasDesechadas=mascarillasDesechadas+1
+            time_masks_Desechadas=time_masks_Desechadas+(clock - mask.get_initial_clock())
     return
 
 #llega una mascarilla a la seccion 2
@@ -257,12 +266,12 @@ def event_five():
     global s2_server2
     global queue_s2
     clock = events[4].pop(0)
-    print("e5",events,clock)
+    #print("e5",events,clock)
     if queue_s2 >= 1:
 			#mascarilla 2
-        print("---------------------------OCUPADO S2S1?",s2_server1.getOcupado())
+        #print("---------------------------OCUPADO S2S1?",s2_server1.getOcupado())
         if s2_server1.getOcupado() == False:
-            print("entra a s2.server1")
+            #print("entra a s2.server1")
             mask = seccionUnoAseccionDos.get()				#no puedo tomar esta, porque puede que en la cola esten esperando ya otras antes.
             seccion2Queue.put(mask)							#se mete a la cola.
             new_mask = seccion2Queue.get()				#mascarilla 1
@@ -273,7 +282,8 @@ def event_five():
             d3 =generate_distribution(2)
             events[5][0] = clock + d3
             s2_server1.setOcupado(True)
-            s2_server1.setTiempoOcupado((d3))
+            if clock > 120:
+                s2_server1.setTiempoOcupado((d3))
 
         elif s2_server2.getOcupado() == False:
             mask = seccionUnoAseccionDos.get()				#no puedo tomar esta, porque puede que en la cola esten esperando ya otras antes.
@@ -286,18 +296,19 @@ def event_five():
             queue_s2 = queue_s2 - 1
             d4 = generate_distribution(3)
             events[6][0] = clock + d4
-            s2_server2.setTiempoOcupado((d4))
+            if clock > 120:
+                s2_server2.setTiempoOcupado((d4))
             s2_server2.setOcupado(True)
         else:
             mask = seccionUnoAseccionDos.get()
             seccion2Queue.put(mask)
             queue_s2 = queue_s2 + 1
-            print("se encola S2")
+            #print("se encola S2")
     else:
         mask = seccionUnoAseccionDos.get()
         seccion2Queue.put(mask)
         queue_s2 = queue_s2 + 1
-        print("se encola S2")
+        #print("se encola S2")
     return
 
 
@@ -311,12 +322,13 @@ def event_six():
     global mascarillasDesechadas
     global clock
     global time_masks
+    global time_masks_Desechadas
     global seccionUnoAseccionDos
     global seccionDosAseccionUno
     global seccion2Queue
     #s2_server1 = False
     clock = events[5][0]
-    print("e6",events,clock)
+    #print("e6",events,clock)
     mask_ready1 = s2_server1.desencolarMascarrilla()		#mascarillas que acaba de terminar de trabajar.
     mask_ready2 = s2_server1.desencolarMascarrilla()
     if queue_s2 >= 2:
@@ -338,11 +350,16 @@ def event_six():
         seccionDosAseccionUno.put(mask_ready1)				#las meto en esa lista, para que el evento 2 las pueda sacar.
         seccionDosAseccionUno.put(mask_ready2)
     elif random_value >= 5 and random_value<20:
-        mascarillasDesechadas=mascarillasDesechadas+2
+        if clock > 120:
+            mascarillasDesechadas=mascarillasDesechadas+2
+            time_masks_Desechadas=time_masks_Desechadas+ (clock - mask_ready1.get_initial_clock())
+            time_masks_Desechadas=time_masks_Desechadas+ (clock - mask_ready2.get_initial_clock())
+
     elif random_value >= 75:
-        paquetesListos=paquetesListos+1
-        time_masks = time_masks + (clock - mask_ready1.get_initial_clock())
-        time_masks = time_masks + (clock - mask_ready2.get_initial_clock())
+        if clock > 120:
+            paquetesListos=paquetesListos+1
+            time_masks = time_masks + (clock - mask_ready1.get_initial_clock())
+            time_masks = time_masks + (clock - mask_ready2.get_initial_clock())
     return
 
 
@@ -357,8 +374,9 @@ def event_seven():
     global seccionUnoAseccionDos
     global seccionDosAseccionUno
     global seccion2Queue
+    global time_masks_Desechadas
     clock = events[6][0]
-    print("e7",events,clock)
+    #print("e7",events,clock)
     mask_ready1 = s2_server2.desencolarMascarrilla()
     mask_ready2 = s2_server2.desencolarMascarrilla()
     if queue_s2 >= 2:
@@ -375,16 +393,20 @@ def event_seven():
         s2_server2.setOcupado(False)
         #s2_server2 = False
     random_value = randrange(100)
-    if random_value >= 15 and random_value < 40:
+    if random_value > 15 and random_value < 40:
         events[3].append(clock + 2)
         seccionDosAseccionUno.put(mask_ready1)
         seccionDosAseccionUno.put(mask_ready2)
-    elif random_value >= 15 and random_value < 25:
-        mascarillasDesechadas=mascarillasDesechadas+2
+    elif random_value <= 15:
+        if clock > 120:
+            mascarillasDesechadas=mascarillasDesechadas+2
+            time_masks_Desechadas = time_masks_Desechadas + (clock - mask_ready1.get_initial_clock())
+            time_masks_Desechadas = time_masks_Desechadas + (clock - mask_ready2.get_initial_clock())
     elif random_value>=40:
-        paquetesListos=paquetesListos+1
-        time_masks = time_masks + (clock - mask_ready1.get_initial_clock())
-        time_masks = time_masks + (clock - mask_ready2.get_initial_clock())
+        if clock > 120:
+            paquetesListos=paquetesListos+1
+            time_masks = time_masks + (clock - mask_ready1.get_initial_clock())
+            time_masks = time_masks + (clock - mask_ready2.get_initial_clock())
     return
 
 #metodo para inicializar datos para iniciar la simulacion
@@ -494,8 +516,11 @@ def main():
     print("Longitud de la cola seccion 1:", s1_server1.getLongitudCola())
     print("Longitud de la cola seccion 2:", seccion2Queue.qsize())
 
-    print("tiempo de las mascarillas en el sistema : ", time_masks)
-    print("tiempo promedio que dura una mascarilla en el sistema : ", time_masks / (paquetesListos * 2))
+    print("tiempo de las mascarillas en el sistema : ", (time_masks+time_masks_Desechadas)/((paquetesListos * 2)+mascarillasDesechadas))
+
+    print("tiempo promedio que dura una mascarilla en el sistema antes de desecharse :",(time_masks_Desechadas/mascarillasDesechadas))
+
+    print("tiempo promedio que dura una mascarilla en el sistema antes de estar lista :", time_masks / (paquetesListos * 2))
 
     print("Tiempo ocuapdo s1_server1", float(s1_server1.getTiempoOcupado()))
     print("Tiempo ocuapdo s2_server1", float(s2_server1.getTiempoOcupado()))

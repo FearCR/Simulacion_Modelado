@@ -6,7 +6,7 @@ from Mascarilla import mascarilla
 from queue import Queue
 
 MAX_VALUE = 999999999
-TIME_TO_FINISH = 500
+TIME_TO_FINISH = 5000
 clock = 0
 queue_s1 = 0
 queue_s2 = 0

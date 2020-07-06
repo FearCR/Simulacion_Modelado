@@ -448,8 +448,9 @@ def main():
     global constanteK
     global a
     global b
+    global time_masks
+    global time_masks_Desechadas
 
-    data_init(3)
 
     distribution = 0
     d=1
@@ -493,52 +494,76 @@ def main():
                 print("entrada invalida")
         except ValueError:
             print("entrada invalida")
+    runs=int(input("ingrese la cantidad de veces que desea correr la simulacion:  "))
+    for i in range(runs):
+        data_init(1)
+        while clock < TIME_TO_FINISH:
+            event = get_next_event(events)
+            switcher = {
+                0: event_one,
+                1: event_two,
+                2: event_three,
+                3: event_four,
+                4: event_five,
+                5: event_six,
+                6: event_seven
+            }
+            func = switcher.get(event, "invalid event")
+            func()
+            # clock=TIME_TO_FINISH
+            # print(normal(2,10))
+            # print(randrange(100))
+            # lista=[1,2,3]
+        print("\n\n\n\n\nDatos de la corrida",i+1,"\n")
+        print("Mascarillas desechadas ", mascarillasDesechadas)
+        print("Paquetes listos ", paquetesListos)
 
-    while clock < TIME_TO_FINISH:
-        event = get_next_event(events)
-        switcher = {
-            0: event_one,
-            1: event_two,
-            2: event_three,
-            3: event_four,
-            4: event_five,
-            5: event_six,
-            6: event_seven
-        }
-        func = switcher.get(event, "invalid event")
-        func()
-        # clock=TIME_TO_FINISH
-        # print(normal(2,10))
-        # print(randrange(100))
-        # lista=[1,2,3]
+        print("Longitud de la cola seccion 1:", s1_server1.getLongitudCola())
+        print("Longitud de la cola seccion 2:", seccion2Queue.qsize())
 
-    print("Mascarillas desechadas ", mascarillasDesechadas)
-    print("Paquetes listos ", paquetesListos)
+        print("tiempo de las mascarillas en el sistema : ", (time_masks+time_masks_Desechadas)/((paquetesListos * 2)+mascarillasDesechadas))
 
-    print("Longitud de la cola seccion 1:", s1_server1.getLongitudCola())
-    print("Longitud de la cola seccion 2:", seccion2Queue.qsize())
+        print("tiempo promedio que dura una mascarilla en el sistema antes de desecharse :",(time_masks_Desechadas/mascarillasDesechadas))
 
-    print("tiempo de las mascarillas en el sistema : ", (time_masks+time_masks_Desechadas)/((paquetesListos * 2)+mascarillasDesechadas))
+        print("tiempo promedio que dura una mascarilla en el sistema antes de estar lista :", time_masks / (paquetesListos * 2))
 
-    print("tiempo promedio que dura una mascarilla en el sistema antes de desecharse :",(time_masks_Desechadas/mascarillasDesechadas))
+        print("Tiempo ocupado s1_server1", float(s1_server1.getTiempoOcupado()))
+        print("Tiempo ocupado s2_server1", float(s2_server1.getTiempoOcupado()))
+        print("Tiempo ocupado s2_server2", float(s2_server2.getTiempoOcupado()))
 
-    print("tiempo promedio que dura una mascarilla en el sistema antes de estar lista :", time_masks / (paquetesListos * 2))
-
-    print("Tiempo ocupado s1_server1", float(s1_server1.getTiempoOcupado()))
-    print("Tiempo ocupado s2_server1", float(s2_server1.getTiempoOcupado()))
-    print("Tiempo ocupado s2_server2", float(s2_server2.getTiempoOcupado()))
-
-    print("Porcentaje ocupado s1_server1", 100*(float(s1_server1.getTiempoOcupado()/(TIME_TO_FINISH - 120))),"%")
-    print("Porcentaje ocupado s2_server1", 100*(float(s2_server1.getTiempoOcupado()/(TIME_TO_FINISH - 120))),"%")
-    print("Porcentaje ocupado s2_server2", 100*(float(s2_server2.getTiempoOcupado()/(TIME_TO_FINISH - 120))),"%")
+        print("Porcentaje ocupado s1_server1", 100*(float(s1_server1.getTiempoOcupado()/(TIME_TO_FINISH - 120))),"%")
+        print("Porcentaje ocupado s2_server1", 100*(float(s2_server1.getTiempoOcupado()/(TIME_TO_FINISH - 120))),"%")
+        print("Porcentaje ocupado s2_server2", 100*(float(s2_server2.getTiempoOcupado()/(TIME_TO_FINISH - 120))),"%")
 
 
-    equi1=totalMascarillasIngresan/(TIME_TO_FINISH-120)
+        equi1=totalMascarillasIngresan/(TIME_TO_FINISH-120)
 
-    equi2 = ((paquetesListos * 2)+mascarillasDesechadas) / (TIME_TO_FINISH - 120)
+        equi2 = ((paquetesListos * 2)+mascarillasDesechadas) / (TIME_TO_FINISH - 120)
 
-    print("Equilibrio",(equi1/equi2))
+        print("Equilibrio",(equi1/equi2))
 
+        clock = 0
+        queue_s1 = 0
+        queue_s2 = 0
+        s1_server1 = servidor()
+        s2_server1 = servidor()
+        s2_server2 = servidor()
+        tiempoTrabajador1=0
+        tiempoTrabajador2=0
+        tiempoTrabajador3=0
+        paquetesListos=0
+        mascarillasDesechadas=0
+        events = [[MAX_VALUE],[],[],[MAX_VALUE],[],[MAX_VALUE],[MAX_VALUE]]
+        while not seccionUnoAseccionDos.empty():
+            seccionUnoAseccionDos.get()
+        while not seccionDosAseccionUno.empty():
+            seccionDosAseccionUno.get()
+        while not seccion2Queue.empty():
+            seccion2Queue.get()
+
+        time_masks = 0
+        time_masks_Desechadas = 0
+        totalMascarillasIngresan=0
 
     # print("Tiempo ocuado Trabajador 1: ",(tiempoTrabajador1/TIME_TO_FINISH))
     # print("Tiempo ocuado Trabajador 2: ",(tiempoTrabajador2/TIME_TO_FINISH))

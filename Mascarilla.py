@@ -5,7 +5,7 @@ class mascarilla:
         self.initial_clock = 0
 
     def set_initial_clock(self, clock):
-        self.initial_clock = clock
+        self.set_initial_clock = clock
 
     def get_initial_clock(self):
         return self.initial_clock

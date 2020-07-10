@@ -59,7 +59,7 @@ b = [0,0,0,0]
 totalMascarillasIngresan=0
 
 #Estadisticas
-Estadisticas = [0,0,0,0,0,[0,0,0,0],[0,0,0]]
+Estadisticas = [0,0,0,0,0,[0,0,0,0,0],[0,0,0]]
 
 #Para cacular la varianza
 varianza=[]
@@ -474,7 +474,8 @@ def calcularEstadisticasFinales():
     print("tiempo promedio que dura una mascarilla en el sistema antes de estar lista : ", Estadisticas[1])
     print("tiempo que dura una mascarilla en el sistema : ", Estadisticas[2])
     print("Eficiencia del sistema : ", Estadisticas[3])
-    print("Equilibro : ", Estadisticas[4])
+    print("Equilibro del sistema: ", Estadisticas[4])
+    print("Total de mascarillas que ingresaron:",Estadisticas[5][4])
     print("Mascarillas listas : ", Estadisticas[5][2], " y representan : ", Estadisticas[5][3], "% de las que ingresaron")
     print("Mascarillas desechadas : ", Estadisticas[5][0], " y representan : ", Estadisticas[5][1], "% de las que ingresaron")
     print("Porcentaje ocupado s1_server1 : ", Estadisticas[6][0], "%")
@@ -504,7 +505,7 @@ def calcularIntervalo():
     print("El intervalo de cofianza para el tiempo que dura una mascarilla en el sistemaa :[",limiteInferior,",",limiteSuperior,"]")
 
     print("Diferencia es de:", limiteSuperior-limiteInferior)
-    
+
 def main():
     global clock
     global events
@@ -606,7 +607,7 @@ def main():
             # print(normal(2,10))
             # print(randrange(100))
             # lista=[1,2,3]
-        print("\n\n\n\n\nDatos de la corrida", i + 1, "\n")
+        print("\n\n\n\n\nEstadisticas de la corrida", i + 1, "\n")
 
         # Estadistica 1
         print("tiempo promedio que dura una mascarilla en el sistema antes de desecharse :",
@@ -638,10 +639,12 @@ def main():
         # Estadistica 5
         equi1 = totalMascarillasIngresan / (TIME_TO_FINISH - 120)
         equi2 = ((paquetesListos * 2) + mascarillasDesechadas) / (TIME_TO_FINISH - 120)
-        print("Equilibrio", (equi1 / equi2))
+        print("Equilibrio del sistema", (equi1 / equi2))
         Estadisticas[4] = Estadisticas[4] + (equi1 / equi2)
 
         # Estadistica 6
+        print("Total de mascarillas que llegaron:", totalMascarillasIngresan)
+        Estadisticas[5][4] = Estadisticas[5][4]+ totalMascarillasIngresan
         print("Mascarillas desechadas ", mascarillasDesechadas, " y representan: ",
               100 * (mascarillasDesechadas / totalMascarillasIngresan), "% de las que ingresaron")
         Estadisticas[5][0] = Estadisticas[5][0] + mascarillasDesechadas

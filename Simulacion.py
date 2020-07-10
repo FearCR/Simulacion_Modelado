@@ -591,7 +591,7 @@ def main():
         print("Porcentaje ocupado s2_server2", 100 * (float(s2_server2.getTiempoOcupado() / (TIME_TO_FINISH - 120))),
               "%")
 
-        Estadisticas[6][2] = Estadisticas[6][1] + (100 * (float(s2_server2.getTiempoOcupado() / (TIME_TO_FINISH - 120))))
+        Estadisticas[6][2] = Estadisticas[6][2] + (100 * (float(s2_server2.getTiempoOcupado() / (TIME_TO_FINISH - 120))))
 
 
         print("Longitud de la cola seccion 1:", s1_server1.getLongitudCola())
@@ -622,29 +622,30 @@ def main():
 
     if runs==10:
         calcularIntervalo()
-    
-    print("\n\n\n\nESTADISTICAS FINALES DE LAS : ", runs, "  SIMULACIONES") 
-    print("-------------------------------------------------------------------------")   
+
+    print("\n\n\n\nESTADISTICAS FINALES DE LAS : ", runs, "  SIMULACIONES")
+    print("-------------------------------------------------------------------------")
     calcularEstadisticasFinales()
     print("-------------------------------------------------------------------------")
 
 def calcularEstadisticasFinales():
-	global runs
-	for i in range(len(Estadisticas)):
-		if i != 5 and i != 6:
-			Estadisticas[i] = Estadisticas[i]/runs
-		else:
-				for j in range(len(Estadisticas[i])):
-					Estadisticas[i][j] = Estadisticas[i][j]/runs
+    global runs
+    for i in range(len(Estadisticas)):
+        if i != 5 and i != 6:
+            Estadisticas[i] = Estadisticas[i]/runs
+        else:
+            for j in range(len(Estadisticas[i])):
+                Estadisticas[i][j] = Estadisticas[i][j]/runs
 	#print("Las estadisticas finales son : ", Estadisticas)
-	print("tiempo promedio que dura una mascarilla en el sistema antes de desecharse : ", Estadisticas[0])
-	print("tiempo promedio que dura una mascarilla en el sistema antes de estar lista : ", Estadisticas[1])
-	print("tiempo que dura una mascarilla en el sistema : ", Estadisticas[2])
-	print("Equilibro : ", Estadisticas[4])
-	print("Mascarillas desechadas : ", Estadisticas[5][0], " y representan : ", Estadisticas[5][1], "% de las que ingresaron")
-	print("Porcentaje ocupado s1_server1 : ", Estadisticas[6][0], "%")
-	print("Porcentaje ocupado s2_server1 : ", Estadisticas[6][1], "%")
-	print("Porcentaje ocupado s2_server2 : ", Estadisticas[6][2], "%")
+    print("tiempo promedio que dura una mascarilla en el sistema antes de desecharse : ", Estadisticas[0])
+    print("tiempo promedio que dura una mascarilla en el sistema antes de estar lista : ", Estadisticas[1])
+    print("tiempo que dura una mascarilla en el sistema : ", Estadisticas[2])
+    print("Equilibro : ", Estadisticas[4])
+    print("Mascarillas listas : ", Estadisticas[5][2], " y representan : ", Estadisticas[5][3], "% de las que ingresaron")
+    print("Mascarillas desechadas : ", Estadisticas[5][0], " y representan : ", Estadisticas[5][1], "% de las que ingresaron")
+    print("Porcentaje ocupado s1_server1 : ", Estadisticas[6][0], "%")
+    print("Porcentaje ocupado s2_server1 : ", Estadisticas[6][1], "%")
+    print("Porcentaje ocupado s2_server2 : ", Estadisticas[6][2], "%")
 
 
 def calcularIntervalo():

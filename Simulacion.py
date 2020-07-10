@@ -72,6 +72,8 @@ d4_accumulated = 0
 counter_s1 = 0
 counter_s2 = 0
 
+t_system_efficiency = 0
+
 
 #distribuciones
 def uniforme(a,b):
@@ -489,6 +491,7 @@ def main():
     global time_masks_Desechadas
     global Estadisticas
     global varianza
+    global t_system_efficiency
     global runs
 
     distribution = 0
@@ -625,10 +628,13 @@ def main():
 
         print("Longitud de la cola seccion 1:", s1_server1.getLongitudCola())
         print("Longitud de la cola seccion 2:", seccion2Queue.qsize())
+        
+        print("Eficiencia del sistema : ", (d2_accumulated/counter_s1)*((d3_accumulated+d4_accumulated)/counter_s2))
+        t_system_efficiency = t_system_efficiency + (d2_accumulated/counter_s1)*((d3_accumulated+d4_accumulated)/counter_s2)
 
         # print("las estadisticas son : ", Estadisticas)
         input("\n\npresione la tecla Enter para continuar...\n\n")
-
+		
 
 
 
@@ -682,7 +688,7 @@ def calcularEstadisticasFinales():
     print("Porcentaje ocupado s1_server1 : ", Estadisticas[6][0], "%")
     print("Porcentaje ocupado s2_server1 : ", Estadisticas[6][1], "%")
     print("Porcentaje ocupado s2_server2 : ", Estadisticas[6][2], "%")
-    print("Eficiencia del sistema : ", (d2_accumulated/counter_s1)*((d3_accumulated+d4_accumulated)/counter_s2))
+    print("Eficiencia del sistema : ", t_system_efficiency/runs)
 
 
 def calcularIntervalo():

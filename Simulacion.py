@@ -460,7 +460,51 @@ def get_next_event(events):
             if events[i][0]<events[next_event][0]:
                 next_event=i
     return next_event
+def calcularEstadisticasFinales():
+    global runs
+    global Estadisticas
+    for i in range(len(Estadisticas)):
+        if i != 5 and i != 6:
+            Estadisticas[i] = Estadisticas[i]/runs
+        else:
+            for j in range(len(Estadisticas[i])):
+                Estadisticas[i][j] = Estadisticas[i][j]/runs
+	#print("Las estadisticas finales son : ", Estadisticas)
+    print("tiempo promedio que dura una mascarilla en el sistema antes de desecharse : ", Estadisticas[0])
+    print("tiempo promedio que dura una mascarilla en el sistema antes de estar lista : ", Estadisticas[1])
+    print("tiempo que dura una mascarilla en el sistema : ", Estadisticas[2])
+    print("Eficiencia del sistema : ", Estadisticas[3])
+    print("Equilibro : ", Estadisticas[4])
+    print("Mascarillas listas : ", Estadisticas[5][2], " y representan : ", Estadisticas[5][3], "% de las que ingresaron")
+    print("Mascarillas desechadas : ", Estadisticas[5][0], " y representan : ", Estadisticas[5][1], "% de las que ingresaron")
+    print("Porcentaje ocupado s1_server1 : ", Estadisticas[6][0], "%")
+    print("Porcentaje ocupado s2_server1 : ", Estadisticas[6][1], "%")
+    print("Porcentaje ocupado s2_server2 : ", Estadisticas[6][2], "%")
 
+
+
+def calcularIntervalo():
+    global varianza
+    global Estadisticas
+    mediaMuestral=(Estadisticas[2]/10)
+
+    sumatoria=0
+
+    for i in varianza:
+        sumatoria=sumatoria+(pow((i-mediaMuestral),2))
+
+    varianzaMuestral= sumatoria/9
+
+    final=math.sqrt((varianzaMuestral/10))
+
+    limiteInferior=(mediaMuestral-2.26)*final
+    limiteSuperior = (mediaMuestral + 2.26) * final
+
+
+    print("El intervalo de cofianza para el tiempo que dura una mascarilla en el sistemaa :[",limiteInferior,",",limiteSuperior,"]")
+
+    print("Diferencia es de:", limiteSuperior-limiteInferior)
+    
 def main():
     global clock
     global events
@@ -682,50 +726,7 @@ def main():
     calcularEstadisticasFinales()
     print("-------------------------------------------------------------------------")
 
-def calcularEstadisticasFinales():
-    global runs
-    global Estadisticas
-    for i in range(len(Estadisticas)):
-        if i != 5 and i != 6:
-            Estadisticas[i] = Estadisticas[i]/runs
-        else:
-            for j in range(len(Estadisticas[i])):
-                Estadisticas[i][j] = Estadisticas[i][j]/runs
-	#print("Las estadisticas finales son : ", Estadisticas)
-    print("tiempo promedio que dura una mascarilla en el sistema antes de desecharse : ", Estadisticas[0])
-    print("tiempo promedio que dura una mascarilla en el sistema antes de estar lista : ", Estadisticas[1])
-    print("tiempo que dura una mascarilla en el sistema : ", Estadisticas[2])
-    print("Eficiencia del sistema : ", Estadisticas[3])
-    print("Equilibro : ", Estadisticas[4])
-    print("Mascarillas listas : ", Estadisticas[5][2], " y representan : ", Estadisticas[5][3], "% de las que ingresaron")
-    print("Mascarillas desechadas : ", Estadisticas[5][0], " y representan : ", Estadisticas[5][1], "% de las que ingresaron")
-    print("Porcentaje ocupado s1_server1 : ", Estadisticas[6][0], "%")
-    print("Porcentaje ocupado s2_server1 : ", Estadisticas[6][1], "%")
-    print("Porcentaje ocupado s2_server2 : ", Estadisticas[6][2], "%")
 
-
-
-def calcularIntervalo():
-    global varianza
-    global Estadisticas
-    mediaMuestral=(Estadisticas[2]/10)
-
-    sumatoria=0
-
-    for i in varianza:
-        sumatoria=sumatoria+(pow((i-mediaMuestral),2))
-
-    varianzaMuestral= sumatoria/9
-
-    final=math.sqrt((varianzaMuestral/10))
-
-    limiteInferior=(mediaMuestral-2.26)*final
-    limiteSuperior = (mediaMuestral + 2.26) * final
-
-
-    print("El intervalo de cofianza para el tiempo que dura una mascarilla en el sistemaa :[",limiteInferior,",",limiteSuperior,"]")
-
-    print("Diferencia es de:", limiteSuperior-limiteInferior)
 
 if __name__ == "__main__":
     main()

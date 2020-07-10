@@ -64,6 +64,14 @@ Estadisticas = [0,0,0,0,0,[0,0,0,0],[0,0,0]]
 #Para cacular la varianza
 varianza=[]
 
+d2_accumulated = 0
+d3_accumulated = 0
+d4_accumulated = 0
+
+
+counter_s1 = 0
+counter_s2 = 0
+
 
 #distribuciones
 def uniforme(a,b):
@@ -135,6 +143,7 @@ def event_one():
     global seccionDosAseccionUno
     global seccion2Queue
     global totalMascarillasIngresan
+    global d2_accumulated
     clock = events[0][0]
     #print("e1",events,clock)
     if clock > 120:
@@ -150,6 +159,7 @@ def event_one():
         mask.set_initial_clock(clock)
         s1_server1.setMascarillaSiendoAtendida(mask)
         d2 = generate_distribution(1)
+        d2_accumulated = d2_accumulated + d2
         #print("se esta imprimiendo d2 : ", d2)
         if clock > 120:
             s1_server1.setTiempoOcupado((d2))
@@ -178,6 +188,7 @@ def event_two():
     global seccionUnoAseccionDos
     global seccionDosAseccionUno
     global seccion2Queue
+    global d2_accumulated
     clock=events[1].pop(0)
     #print("e2",events,clock)
     mask_one = seccionDosAseccionUno.get()
@@ -188,6 +199,7 @@ def event_two():
         s1_server1.setMascarillaSiendoAtendida(mask_two)
         s1_server1.setOcupado(True)
         d2 = generate_distribution(1)
+        d2_accumulated = d2_accumulated + d2
         events[3][0] = clock + d2
         if clock > 120:
             s1_server1.setTiempoOcupado((d2))
@@ -209,6 +221,7 @@ def event_three():
     global seccionUnoAseccionDos
     global seccionDosAseccionUno
     global seccion2Queue
+    global d2_accumulated
     clock = events[2].pop(0)
     #print("e3",events,clock)
     mask_one = seccionDosAseccionUno.get()
@@ -219,6 +232,7 @@ def event_three():
         s1_server1.setOcupado(True)
         queue_s1 = queue_s1 + 1
         d2 = generate_distribution(1)
+        d2_accumulated = d2_accumulated + d2
         events[3][0] = clock + d2
         if clock > 120:
             s1_server1.setTiempoOcupado((d2))
@@ -242,6 +256,9 @@ def event_four():
     global seccionDosAseccionUno
     global seccion2Queue
     global time_masks_Desechadas
+    global d2_accumulated
+    global counter_s1
+    counter_s1 = counter_s1 + 1
     clock = events[3][0]
     #print("e4",events,clock)
     mask = s1_server1.getMascarillaSiendoAtendida()
@@ -251,6 +268,7 @@ def event_four():
         new_mask = s1_server1.desencolarMascarrilla()
         s1_server1.setMascarillaSiendoAtendida(new_mask)
         d2 = generate_distribution(1)
+        d2_accumulated = d2_accumulated + d2
         if clock > 120:
             s1_server1.setTiempoOcupado(( d2))
         events[3][0] = clock + d2
@@ -274,6 +292,8 @@ def event_five():
     global s2_server1
     global s2_server2
     global queue_s2
+    global d3_accumulated
+    global d4_accumulated
     clock = events[4].pop(0)
     #print("e5",events,clock)
     if queue_s2 >= 1:
@@ -289,6 +309,7 @@ def event_five():
             s2_server1.encolarMascarrilla(new_mask2)	#same
             queue_s2 = queue_s2 - 1
             d3 =generate_distribution(2)
+            d3_accumulated = d3_accumulated + d3
             events[5][0] = clock + d3
             s2_server1.setOcupado(True)
             if clock > 120:
@@ -304,6 +325,7 @@ def event_five():
             s2_server2.encolarMascarrilla(new_mask2)
             queue_s2 = queue_s2 - 1
             d4 = generate_distribution(3)
+            d4_accumulated = d4_accumulated + d4
             events[6][0] = clock + d4
             if clock > 120:
                 s2_server2.setTiempoOcupado((d4))
@@ -335,6 +357,9 @@ def event_six():
     global seccionUnoAseccionDos
     global seccionDosAseccionUno
     global seccion2Queue
+    global counter_s2
+    global d3_accumulated
+    counter_s2 = counter_s2 + 1
     #s2_server1 = False
     clock = events[5][0]
     #print("e6",events,clock)
@@ -347,6 +372,7 @@ def event_six():
         s2_server1.encolarMascarrilla(new_mask2)
         queue_s2 = queue_s2 - 2
         d3 = generate_distribution(2)
+        d3_accumulated = d3_accumulated + d3
         events[5][0] = clock + d3
         #s2_server1.setTiempoOcupado((d3))
     else:
@@ -384,6 +410,9 @@ def event_seven():
     global seccionDosAseccionUno
     global seccion2Queue
     global time_masks_Desechadas
+    global counter_s2
+    global d4_accumulated
+    counter_s2 = counter_s2
     clock = events[6][0]
     #print("e7",events,clock)
     mask_ready1 = s2_server2.desencolarMascarrilla()
@@ -395,6 +424,7 @@ def event_seven():
         s2_server2.encolarMascarrilla(new_mask2)
         queue_s2 = queue_s2 - 2
         d4 = generate_distribution(3)
+        d4_accumulated = d4_accumulated + d4
         events[6][0] = clock + d4
         #s2_server2.setTiempoOcupado((d4))
     else:
@@ -652,6 +682,7 @@ def calcularEstadisticasFinales():
     print("Porcentaje ocupado s1_server1 : ", Estadisticas[6][0], "%")
     print("Porcentaje ocupado s2_server1 : ", Estadisticas[6][1], "%")
     print("Porcentaje ocupado s2_server2 : ", Estadisticas[6][2], "%")
+    print("Eficiencia del sistema : ", (d2_accumulated/counter_s1)*((d3_accumulated+d4_accumulated)/counter_s2))
 
 
 def calcularIntervalo():

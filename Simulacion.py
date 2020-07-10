@@ -4,6 +4,7 @@ import math
 from Servidor import servidor
 from Mascarilla import mascarilla
 from queue import Queue
+import msvcrt
 
 MAX_VALUE = 999999999
 TIME_TO_FINISH = 5000
@@ -81,7 +82,7 @@ def normal(Mu,vari):
     x = (SD * Z) + Mu
     if x<0:
         x=-1*x
-    return x+1
+    return x
 
 def exponencial(lamb):
     r = random()
@@ -92,7 +93,7 @@ def convolucion(Mu,vari):
     Z=0
     for i in range(1,13):
         r = random()
-        Z=Z+r
+        Z=Z+(r-6)
 
     SD=math.sqrt(vari)
     x = (SD * Z) + Mu
@@ -434,7 +435,6 @@ def main():
     global clock
     global events
     global MAX_VALUE
-    global TIME_TO_FINISH
     global s1_server1
     global s2_server1
     global s2_server2
@@ -462,7 +462,7 @@ def main():
     global runs
 
     distribution = 0
-    d=1
+    d = 1
     runs = int(input("ingrese la cantidad de veces que desea correr la simulacion:  "))
     max_Time = int(input("ingrese el tiempo maximo que desea correr la simulacion:  "))
     while distribution < 4:
@@ -505,10 +505,10 @@ def main():
                 print("entrada invalida")
         except ValueError:
             print("entrada invalida")
-    TIME_TO_FINISH=max_Time
+    TIME_TO_FINISH = max_Time
     for i in range(runs):
         data_init(1)
-        while clock < TIME_TO_FINISH:
+        while clock < (TIME_TO_FINISH+120):
             event = get_next_event(events)
             switcher = {
                 0: event_one,
@@ -525,54 +525,50 @@ def main():
             # print(normal(2,10))
             # print(randrange(100))
             # lista=[1,2,3]
-        print("\n\n\n\n\nDatos de la corrida",i+1,"\n")
+        print("\n\n\n\n\nDatos de la corrida", i + 1, "\n")
 
         # Estadistica 1
         print("tiempo promedio que dura una mascarilla en el sistema antes de desecharse :",
               (time_masks_Desechadas / mascarillasDesechadas))
 
-        Estadisticas[0]=Estadisticas[0]+(time_masks_Desechadas / mascarillasDesechadas)
-
+        Estadisticas[0] = Estadisticas[0] + (time_masks_Desechadas / mascarillasDesechadas)
 
         # Estadistica 2
-        print("tiempo promedio que dura una mascarilla en el sistema antes de estar lista :", time_masks / (paquetesListos * 2))
+        print("tiempo promedio que dura una mascarilla en el sistema antes de estar lista :",
+              time_masks / (paquetesListos * 2))
         Estadisticas[1] = Estadisticas[1] + (time_masks / (paquetesListos * 2))
 
         # Estadistica 3
-        print("tiempo que dura una mascarilla en el sistema : ", (time_masks+time_masks_Desechadas)/((paquetesListos * 2)+mascarillasDesechadas))
-        Estadisticas[2] = Estadisticas[2]+((time_masks+time_masks_Desechadas)/((paquetesListos * 2)+mascarillasDesechadas))
-        #Para la varianza
-        if runs==10:
-            varianza.append((time_masks+time_masks_Desechadas)/((paquetesListos * 2)+mascarillasDesechadas))
+        print("tiempo que dura una mascarilla en el sistema : ",
+              (time_masks + time_masks_Desechadas) / ((paquetesListos * 2) + mascarillasDesechadas))
+        Estadisticas[2] = Estadisticas[2] + (
+                    (time_masks + time_masks_Desechadas) / ((paquetesListos * 2) + mascarillasDesechadas))
+        # Para la varianza
+        if runs == 10:
+            varianza.append((time_masks + time_masks_Desechadas) / ((paquetesListos * 2) + mascarillasDesechadas))
 
-        #Estadistica 4
+        # Estadistica 4
 
-
-
-
-        #Estadistica 5
+        # Estadistica 5
         equi1 = totalMascarillasIngresan / (TIME_TO_FINISH - 120)
         equi2 = ((paquetesListos * 2) + mascarillasDesechadas) / (TIME_TO_FINISH - 120)
         print("Equilibrio", (equi1 / equi2))
-        Estadisticas[4] = Estadisticas[4]+(equi1 / equi2)
-
+        Estadisticas[4] = Estadisticas[4] + (equi1 / equi2)
 
         # Estadistica 6
         print("Mascarillas desechadas ", mascarillasDesechadas, " y representan: ",
-              100*(mascarillasDesechadas/totalMascarillasIngresan),"% de las que ingresaron")
-        Estadisticas[5][0]=Estadisticas[5][0]+mascarillasDesechadas
-        #Porcentaje
-        Estadisticas[5][1] = Estadisticas[5][1] +  100*(mascarillasDesechadas/totalMascarillasIngresan)
+              100 * (mascarillasDesechadas / totalMascarillasIngresan), "% de las que ingresaron")
+        Estadisticas[5][0] = Estadisticas[5][0] + mascarillasDesechadas
+        # Porcentaje
+        Estadisticas[5][1] = Estadisticas[5][1] + 100 * (mascarillasDesechadas / totalMascarillasIngresan)
 
-        print("Mascarillas listas ", (paquetesListos*2), " y representan: "
-              , 100*((paquetesListos*2)/totalMascarillasIngresan),"% de las que ingresaron")
+        print("Mascarillas listas ", (paquetesListos * 2), " y representan: "
+              , 100 * ((paquetesListos * 2) / totalMascarillasIngresan), "% de las que ingresaron")
 
-        Estadisticas[5][2] = Estadisticas[5][2] + (paquetesListos*2)
+        Estadisticas[5][2] = Estadisticas[5][2] + (paquetesListos * 2)
 
         # Porcentaje
-        Estadisticas[5][3] = Estadisticas[5][3] + 100*((paquetesListos*2)/totalMascarillasIngresan)
-
-
+        Estadisticas[5][3] = Estadisticas[5][3] + 100 * ((paquetesListos * 2) / totalMascarillasIngresan)
 
         # Estadistica 7
         print("Tiempo ocupado s1_server1", float(s1_server1.getTiempoOcupado()))
@@ -582,25 +578,33 @@ def main():
         print("Porcentaje ocupado s1_server1", 100 * (float(s1_server1.getTiempoOcupado() / (TIME_TO_FINISH - 120))),
               "%")
 
-        Estadisticas[6][0]=Estadisticas[6][0]+(100 * (float(s1_server1.getTiempoOcupado() / (TIME_TO_FINISH - 120))))
+        Estadisticas[6][0] = Estadisticas[6][0] + (
+                    100 * (float(s1_server1.getTiempoOcupado() / (TIME_TO_FINISH - 120))))
 
         print("Porcentaje ocupado s2_server1", 100 * (float(s2_server1.getTiempoOcupado() / (TIME_TO_FINISH - 120))),
               "%")
 
-        Estadisticas[6][1] = Estadisticas[6][1]+(100 * (float(s2_server1.getTiempoOcupado() / (TIME_TO_FINISH - 120))))
-
+        Estadisticas[6][1] = Estadisticas[6][1] + (
+                    100 * (float(s2_server1.getTiempoOcupado() / (TIME_TO_FINISH - 120))))
 
         print("Porcentaje ocupado s2_server2", 100 * (float(s2_server2.getTiempoOcupado() / (TIME_TO_FINISH - 120))),
               "%")
 
-        Estadisticas[6][2] = Estadisticas[6][2] + (100 * (float(s2_server2.getTiempoOcupado() / (TIME_TO_FINISH - 120))))
-
+        Estadisticas[6][2] = Estadisticas[6][2] + (
+                    100 * (float(s2_server2.getTiempoOcupado() / (TIME_TO_FINISH - 120))))
 
         print("Longitud de la cola seccion 1:", s1_server1.getLongitudCola())
         print("Longitud de la cola seccion 2:", seccion2Queue.qsize())
 
-        #print("las estadisticas son : ", Estadisticas)
+        # print("las estadisticas son : ", Estadisticas)
         input("\n\npresione la tecla Enter para continuar...\n\n")
+
+
+
+
+
+        #print("las estadisticas son : ", Estadisticas)
+
         clock = 0
         queue_s1 = 0
         queue_s2 = 0

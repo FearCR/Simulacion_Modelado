@@ -502,7 +502,7 @@ def calcularIntervalo():
     limiteSuperior = (mediaMuestral + 2.26) * final
 
 
-    print("El intervalo de cofianza para el tiempo que dura una mascarilla en el sistemaa :[",limiteInferior,",",limiteSuperior,"]")
+    print("El intervalo de confianza para el tiempo que dura una mascarilla en el sistema :[",limiteInferior,",",limiteSuperior,"]")
 
     print("Diferencia es de:", limiteSuperior-limiteInferior)
 
@@ -721,11 +721,12 @@ def main():
         time_masks_Desechadas = 0
         totalMascarillasIngresan=0
 
-    if runs==10:
-        calcularIntervalo()
+
 
     print("\n\n\n\nESTADISTICAS FINALES DE LAS : ", runs, "  SIMULACIONES")
     print("-------------------------------------------------------------------------")
+    if runs==10:
+        calcularIntervalo()
     calcularEstadisticasFinales()
     print("-------------------------------------------------------------------------")
 

@@ -4,7 +4,7 @@ import math
 from Servidor import servidor
 from Mascarilla import mascarilla
 from queue import Queue
-import msvcrt
+
 
 MAX_VALUE = 999999999
 TIME_TO_FINISH = 5000

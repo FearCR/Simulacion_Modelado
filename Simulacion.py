@@ -72,8 +72,6 @@ d4_accumulated = 0
 counter_s1 = 0
 counter_s2 = 0
 
-t_system_efficiency = 0
-
 
 #distribuciones
 def uniforme(a,b):
@@ -491,8 +489,14 @@ def main():
     global time_masks_Desechadas
     global Estadisticas
     global varianza
-    global t_system_efficiency
     global runs
+    global d2_accumulated
+    global counter_s1
+    global d3_accumulated
+    global d4_accumulated
+    global counter_s2
+
+
 
     distribution = 0
     d = 1
@@ -581,6 +585,11 @@ def main():
             varianza.append((time_masks + time_masks_Desechadas) / ((paquetesListos * 2) + mascarillasDesechadas))
 
         # Estadistica 4
+        print("Eficiencia del sistema : ",
+              (d2_accumulated / counter_s1) * ((d3_accumulated + d4_accumulated) / counter_s2))
+
+        Estadisticas[3]=Estadisticas[3]+(d2_accumulated / counter_s1) * ((d3_accumulated + d4_accumulated) / counter_s2)
+
 
         # Estadistica 5
         equi1 = totalMascarillasIngresan / (TIME_TO_FINISH - 120)
@@ -628,13 +637,10 @@ def main():
 
         print("Longitud de la cola seccion 1:", s1_server1.getLongitudCola())
         print("Longitud de la cola seccion 2:", seccion2Queue.qsize())
-        
-        print("Eficiencia del sistema : ", (d2_accumulated/counter_s1)*((d3_accumulated+d4_accumulated)/counter_s2))
-        t_system_efficiency = t_system_efficiency + (d2_accumulated/counter_s1)*((d3_accumulated+d4_accumulated)/counter_s2)
 
         # print("las estadisticas son : ", Estadisticas)
         input("\n\npresione la tecla Enter para continuar...\n\n")
-		
+
 
 
 
@@ -647,6 +653,12 @@ def main():
         s1_server1 = servidor()
         s2_server1 = servidor()
         s2_server2 = servidor()
+
+        d2_accumulated =0
+        counter_s1 =0
+        d3_accumulated =0
+        d4_accumulated =0
+        counter_s2 =0
 
         paquetesListos=0
         mascarillasDesechadas=0
@@ -672,6 +684,7 @@ def main():
 
 def calcularEstadisticasFinales():
     global runs
+    global Estadisticas
     for i in range(len(Estadisticas)):
         if i != 5 and i != 6:
             Estadisticas[i] = Estadisticas[i]/runs
@@ -682,13 +695,14 @@ def calcularEstadisticasFinales():
     print("tiempo promedio que dura una mascarilla en el sistema antes de desecharse : ", Estadisticas[0])
     print("tiempo promedio que dura una mascarilla en el sistema antes de estar lista : ", Estadisticas[1])
     print("tiempo que dura una mascarilla en el sistema : ", Estadisticas[2])
+    print("Eficiencia del sistema : ", Estadisticas[3])
     print("Equilibro : ", Estadisticas[4])
     print("Mascarillas listas : ", Estadisticas[5][2], " y representan : ", Estadisticas[5][3], "% de las que ingresaron")
     print("Mascarillas desechadas : ", Estadisticas[5][0], " y representan : ", Estadisticas[5][1], "% de las que ingresaron")
     print("Porcentaje ocupado s1_server1 : ", Estadisticas[6][0], "%")
     print("Porcentaje ocupado s2_server1 : ", Estadisticas[6][1], "%")
     print("Porcentaje ocupado s2_server2 : ", Estadisticas[6][2], "%")
-    print("Eficiencia del sistema : ", t_system_efficiency/runs)
+
 
 
 def calcularIntervalo():

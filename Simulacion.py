@@ -434,6 +434,7 @@ def main():
     global clock
     global events
     global MAX_VALUE
+    global TIME_TO_FINISH
     global s1_server1
     global s2_server1
     global s2_server2
@@ -463,6 +464,7 @@ def main():
     distribution = 0
     d=1
     runs = int(input("ingrese la cantidad de veces que desea correr la simulacion:  "))
+    max_Time = int(input("ingrese el tiempo maximo que desea correr la simulacion:  "))
     while distribution < 4:
         try:
             print("seleccione cada una de las distribuciones que desea utilizar para d" + str(d))
@@ -503,7 +505,7 @@ def main():
                 print("entrada invalida")
         except ValueError:
             print("entrada invalida")
-
+    TIME_TO_FINISH=max_Time
     for i in range(runs):
         data_init(1)
         while clock < TIME_TO_FINISH:
@@ -598,7 +600,7 @@ def main():
         print("Longitud de la cola seccion 2:", seccion2Queue.qsize())
 
         #print("las estadisticas son : ", Estadisticas)
-
+        input("\n\npresione la tecla Enter para continuar...\n\n")
         clock = 0
         queue_s1 = 0
         queue_s2 = 0

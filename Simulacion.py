@@ -641,9 +641,9 @@ def main():
 
         # Estadistica 4
         print("Eficiencia del sistema : ",
-              (d2_accumulated / counter_s1) * ((d3_accumulated + d4_accumulated) / counter_s2))
+              ((d2_accumulated / counter_s1) + ((d3_accumulated + d4_accumulated) / counter_s2)/((time_masks + time_masks_Desechadas) / ((paquetesListos * 2) + mascarillasDesechadas))))
 
-        Estadisticas[3]=Estadisticas[3]+(d2_accumulated / counter_s1) * ((d3_accumulated + d4_accumulated) / counter_s2)
+        Estadisticas[3]=Estadisticas[3]+((d2_accumulated / counter_s1) + ((d3_accumulated + d4_accumulated) / counter_s2)/((time_masks + time_masks_Desechadas) / ((paquetesListos * 2) + mascarillasDesechadas)))
 
 
         # Estadistica 5

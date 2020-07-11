@@ -74,11 +74,22 @@ counter_s2 = 0
 
 
 #distribuciones
+
+'''
+@Descripcion: Se encarga de calcular la distribucion uniforme con el "a" 
+y "b" que ingresa el usuario y retorna el resultado
+@utiliza: Los parametros "a" y "b" que da el usuario
+@modifica: Nada
+'''
 def uniforme(a,b):
     r=random()
     x=(b-a)*r+a
     return x
-
+'''
+@Descripcion
+@utiliza
+@modifica
+'''
 def normal(Mu,vari):
     r1 = random()
     r2 = random()
@@ -91,12 +102,20 @@ def normal(Mu,vari):
     if x<0:
         x=-1*x
     return x
-
+'''
+@Descripcion
+@utiliza
+@modifica
+'''
 def exponencial(lamb):
     r = random()
     x=(-math.log(1-r))/lamb
     return x
-
+'''
+@Descripcion
+@utiliza
+@modifica
+'''
 def convolucion(Mu,vari):
     Z=0
     for i in range(1,13):
@@ -106,7 +125,11 @@ def convolucion(Mu,vari):
     SD=math.sqrt(vari)
     x = (SD * Z) + Mu
     return x
-
+'''
+@Descripcion
+@utiliza
+@modifica
+'''
 def funcionDensidad(constanteK,a,b):
     r = random()
     r=2*r
@@ -118,7 +141,11 @@ def funcionDensidad(constanteK,a,b):
     return x
 
 
-
+'''
+@Descripcion
+@utiliza
+@modifica
+'''
 def generate_distribution(index_distribution):
         if distributions[index_distribution] == 1:
             return uniforme(uniform_param_1[index_distribution],uniform_param_2[index_distribution])
@@ -131,7 +158,11 @@ def generate_distribution(index_distribution):
         elif distributions[index_distribution] == 5:
             return funcionDensidad(constanteK[index_distribution],a[index_distribution],b[index_distribution])
 
-
+'''
+@Descripcion
+@utiliza
+@modifica
+'''
 #llega mascarilla del exterior a Seccion 1
 def event_one():
     global clock
@@ -144,6 +175,7 @@ def event_one():
     global seccion2Queue
     global totalMascarillasIngresan
     global d2_accumulated
+    global counter_s1
     clock = events[0][0]
     #print("e1",events,clock)
     if clock > 120:
@@ -160,6 +192,7 @@ def event_one():
         s1_server1.setMascarillaSiendoAtendida(mask)
         d2 = generate_distribution(1)
         d2_accumulated = d2_accumulated + d2
+        counter_s1 = counter_s1 + 1
         #print("se esta imprimiendo d2 : ", d2)
         if clock > 120:
             s1_server1.setTiempoOcupado((d2))
@@ -177,7 +210,11 @@ def event_one():
     events[0][0] = clock + d1
     #print(s1_server1.getOcupado())
     return
-
+'''
+@Descripcion
+@utiliza
+@modifica
+'''
 #llegan 2 mascarillas de la seccion 2 servidor1
 def event_two():
     global clock
@@ -189,6 +226,7 @@ def event_two():
     global seccionDosAseccionUno
     global seccion2Queue
     global d2_accumulated
+    global counter_s1
     clock=events[1].pop(0)
     #print("e2",events,clock)
     mask_one = seccionDosAseccionUno.get()
@@ -200,6 +238,7 @@ def event_two():
         s1_server1.setOcupado(True)
         d2 = generate_distribution(1)
         d2_accumulated = d2_accumulated + d2
+        counter_s1 = counter_s1 + 1
         events[3][0] = clock + d2
         if clock > 120:
             s1_server1.setTiempoOcupado((d2))
@@ -211,7 +250,11 @@ def event_two():
         queue_s1 = queue_s1 + 2
         #print(s1_server1)
     return
-
+'''
+@Descripcion
+@utiliza
+@modifica
+'''
 #llegan 2 mascarillas de la seccion 2 servidor2
 def event_three():
     global s1_server1
@@ -222,6 +265,7 @@ def event_three():
     global seccionDosAseccionUno
     global seccion2Queue
     global d2_accumulated
+    global counter_s1
     clock = events[2].pop(0)
     #print("e3",events,clock)
     mask_one = seccionDosAseccionUno.get()
@@ -233,6 +277,7 @@ def event_three():
         queue_s1 = queue_s1 + 1
         d2 = generate_distribution(1)
         d2_accumulated = d2_accumulated + d2
+        counter_s1 = counter_s1 + 1
         events[3][0] = clock + d2
         if clock > 120:
             s1_server1.setTiempoOcupado((d2))
@@ -243,7 +288,11 @@ def event_three():
         s1_server1.encolarMascarrilla(mask_two)
         queue_s1 = queue_s1 + 2
     return
-
+'''
+@Descripcion
+@utiliza
+@modifica
+'''
 #se desocupa la seccion 1
 def event_four():
     global clock
@@ -258,7 +307,7 @@ def event_four():
     global time_masks_Desechadas
     global d2_accumulated
     global counter_s1
-    counter_s1 = counter_s1 + 1
+    #counter_s1 = counter_s1 + 1
     clock = events[3][0]
     #print("e4",events,clock)
     mask = s1_server1.getMascarillaSiendoAtendida()
@@ -269,6 +318,7 @@ def event_four():
         s1_server1.setMascarillaSiendoAtendida(new_mask)
         d2 = generate_distribution(1)
         d2_accumulated = d2_accumulated + d2
+        counter_s1 = counter_s1 + 1
         if clock > 120:
             s1_server1.setTiempoOcupado(( d2))
         events[3][0] = clock + d2
@@ -284,7 +334,11 @@ def event_four():
             mascarillasDesechadas=mascarillasDesechadas+1
             time_masks_Desechadas=time_masks_Desechadas+(clock - mask.get_initial_clock())
     return
-
+'''
+@Descripcion
+@utiliza
+@modifica
+'''
 #llega una mascarilla a la seccion 2
 def event_five():
     global clock
@@ -294,6 +348,7 @@ def event_five():
     global queue_s2
     global d3_accumulated
     global d4_accumulated
+    global counter_s2
     clock = events[4].pop(0)
     #print("e5",events,clock)
     if queue_s2 >= 1:
@@ -310,6 +365,7 @@ def event_five():
             queue_s2 = queue_s2 - 1
             d3 =generate_distribution(2)
             d3_accumulated = d3_accumulated + d3
+            counter_s2 = counter_s2 + 1
             events[5][0] = clock + d3
             s2_server1.setOcupado(True)
             if clock > 120:
@@ -326,6 +382,7 @@ def event_five():
             queue_s2 = queue_s2 - 1
             d4 = generate_distribution(3)
             d4_accumulated = d4_accumulated + d4
+            counter_s2 = counter_s2 + 1
             events[6][0] = clock + d4
             if clock > 120:
                 s2_server2.setTiempoOcupado((d4))
@@ -342,7 +399,11 @@ def event_five():
         #print("se encola S2")
     return
 
-
+'''
+@Descripcion
+@utiliza
+@modifica
+'''
 #se desocupa el servidor 1 de la seccion 2
 def event_six():
     global events
@@ -359,7 +420,6 @@ def event_six():
     global seccion2Queue
     global counter_s2
     global d3_accumulated
-    counter_s2 = counter_s2 + 1
     #s2_server1 = False
     clock = events[5][0]
     #print("e6",events,clock)
@@ -373,6 +433,7 @@ def event_six():
         queue_s2 = queue_s2 - 2
         d3 = generate_distribution(2)
         d3_accumulated = d3_accumulated + d3
+        counter_s2 = counter_s2 + 1
         events[5][0] = clock + d3
         #s2_server1.setTiempoOcupado((d3))
     else:
@@ -397,7 +458,11 @@ def event_six():
             time_masks = time_masks + (clock - mask_ready2.get_initial_clock())
     return
 
-
+'''
+@Descripcion
+@utiliza
+@modifica
+'''
 #se desocupa el servidor 2 de la seccion 2
 def event_seven():
     global clock
@@ -412,7 +477,6 @@ def event_seven():
     global time_masks_Desechadas
     global counter_s2
     global d4_accumulated
-    counter_s2 = counter_s2
     clock = events[6][0]
     #print("e7",events,clock)
     mask_ready1 = s2_server2.desencolarMascarrilla()
@@ -425,6 +489,7 @@ def event_seven():
         queue_s2 = queue_s2 - 2
         d4 = generate_distribution(3)
         d4_accumulated = d4_accumulated + d4
+        counter_s2 = counter_s2 + 1
         events[6][0] = clock + d4
         #s2_server2.setTiempoOcupado((d4))
     else:
@@ -448,10 +513,23 @@ def event_seven():
             time_masks = time_masks + (clock - mask_ready2.get_initial_clock())
     return
 
+
+'''
+@Descripcion: Inicia la simulacion, programa la llegada de la primera
+mascarilla al sistema
+@utiliza:
+@modifica: events[0][0]=e1
+'''
 #metodo para inicializar datos para iniciar la simulacion
 def data_init(e1):
 	events[0][0]=e1
 
+
+'''
+@Descripcion
+@utiliza
+@modifica
+'''
 #metodo para buscar el evento mas proximo
 def get_next_event(events):
     next_event=0
@@ -460,6 +538,14 @@ def get_next_event(events):
             if events[i][0]<events[next_event][0]:
                 next_event=i
     return next_event
+
+
+
+'''
+@Descripcion
+@utiliza
+@modifica
+'''
 def calcularEstadisticasFinales():
     global runs
     global Estadisticas
@@ -483,7 +569,11 @@ def calcularEstadisticasFinales():
     print("Porcentaje ocupado s2_server2 : ", Estadisticas[6][2], "%")
 
 
-
+'''
+@Descripcion
+@utiliza
+@modifica
+'''
 def calcularIntervalo():
     global varianza
     global Estadisticas
@@ -498,8 +588,8 @@ def calcularIntervalo():
 
     final=math.sqrt((varianzaMuestral/10))
 
-    limiteInferior=(mediaMuestral-2.26)*final
-    limiteSuperior = (mediaMuestral + 2.26) * final
+    limiteInferior=mediaMuestral-(2.26*final)
+    limiteSuperior = mediaMuestral + (2.26 * final)
 
 
     print("El intervalo de confianza para el tiempo que dura una mascarilla en el sistema :[",limiteInferior,",",limiteSuperior,"]")
@@ -541,8 +631,6 @@ def main():
     global d4_accumulated
     global counter_s2
 
-
-
     distribution = 0
     d = 1
     runs = int(input("ingrese la cantidad de veces que desea correr la simulacion:  "))
@@ -553,33 +641,33 @@ def main():
             distributions[distribution] = int(input(
                 "1 : Uniforme - 2: Directo  - 3 : Exponencial - 4 : Convolucion  : - 5 : Funcion Densidad  :\n"))
             if distributions[distribution] == 1:
-                uniform_param_1[distribution] = int(input(
+                uniform_param_1[distribution] = float(input(
                     "ingrese el valor de a "))
-                uniform_param_2[distribution] = int(input(
+                uniform_param_2[distribution] = float(input(
                     "ingrese el valor de b "))
                 distribution = distribution + 1
                 d = d + 1
             elif distributions[distribution] == 2:
-                normal_param_1[distribution] = int(input("ingrese el valor de miu : "))
-                normal_param_2[distribution] = int(input("ingrese el valor de la varianza  : "))
+                normal_param_1[distribution] = float(input("ingrese el valor de miu : "))
+                normal_param_2[distribution] = float(input("ingrese el valor de la varianza  : "))
                 distribution = distribution + 1
                 d = d + 1
             elif distributions[distribution] == 3:
-                exponential_param[distribution] = int(input("ingrese el valor de lambda : "))
+                exponential_param[distribution] = float(input("ingrese el valor de lambda : "))
                 distribution = distribution + 1
                 d = d + 1
             elif distributions[distribution] == 4:
-                convolution_param_1[distribution] = int(input("ingrese el valor de miu : "))
-                convolution_param_2[distribution] = int(input("ingrese el valor de la varianza  : "))
+                convolution_param_1[distribution] = float(input("ingrese el valor de miu : "))
+                convolution_param_2[distribution] = float(input("ingrese el valor de la varianza  : "))
                 distribution = distribution + 1
                 d = d + 1
             elif distributions[distribution] == 5:
-                constanteK[distribution] = int(input(
+                constanteK[distribution] = float(input(
                     "ingrese la constante "))
-                a[distribution] = int(input(
+                a[distribution] = float(input(
                     "ingrese el valor de a "))
 
-                b[distribution] = int(input(
+                b[distribution] = float(input(
                     "ingrese el valor de b "))
                 distribution = distribution + 1
                 d = d + 1
@@ -631,9 +719,9 @@ def main():
 
         # Estadistica 4
         print("Eficiencia del sistema : ",
-              (d2_accumulated / counter_s1) * ((d3_accumulated + d4_accumulated) / counter_s2))
+              ((d2_accumulated / counter_s1) + ((d3_accumulated + d4_accumulated) / counter_s2)/((time_masks + time_masks_Desechadas) / ((paquetesListos * 2) + mascarillasDesechadas))))
 
-        Estadisticas[3]=Estadisticas[3]+(d2_accumulated / counter_s1) * ((d3_accumulated + d4_accumulated) / counter_s2)
+        Estadisticas[3]=Estadisticas[3]+((d2_accumulated / counter_s1) + ((d3_accumulated + d4_accumulated) / counter_s2)/((time_masks + time_masks_Desechadas) / ((paquetesListos * 2) + mascarillasDesechadas)))
 
 
         # Estadistica 5
@@ -692,7 +780,7 @@ def main():
 
 
 
-        #print("las estadisticas son : ", Estadisticas)
+        #reinicio de las variables globales
 
         clock = 0
         queue_s1 = 0

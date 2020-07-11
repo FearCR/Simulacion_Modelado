@@ -264,7 +264,7 @@ def event_four():
     global time_masks_Desechadas
     global d2_accumulated
     global counter_s1
-    counter_s1 = counter_s1 + 1
+    #counter_s1 = counter_s1 + 1
     clock = events[3][0]
     #print("e4",events,clock)
     mask = s1_server1.getMascarillaSiendoAtendida()

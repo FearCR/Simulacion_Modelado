@@ -144,6 +144,7 @@ def event_one():
     global seccion2Queue
     global totalMascarillasIngresan
     global d2_accumulated
+    global counter_s1
     clock = events[0][0]
     #print("e1",events,clock)
     if clock > 120:
@@ -159,8 +160,8 @@ def event_one():
         mask.set_initial_clock(clock)
         s1_server1.setMascarillaSiendoAtendida(mask)
         d2 = generate_distribution(1)
-        print("Tiempo de servicio", d2)
         d2_accumulated = d2_accumulated + d2
+        counter_s1 = counter_s1 + 1
         #print("se esta imprimiendo d2 : ", d2)
         if clock > 120:
             s1_server1.setTiempoOcupado((d2))
@@ -190,6 +191,7 @@ def event_two():
     global seccionDosAseccionUno
     global seccion2Queue
     global d2_accumulated
+    global counter_s1
     clock=events[1].pop(0)
     #print("e2",events,clock)
     mask_one = seccionDosAseccionUno.get()
@@ -201,6 +203,7 @@ def event_two():
         s1_server1.setOcupado(True)
         d2 = generate_distribution(1)
         d2_accumulated = d2_accumulated + d2
+        counter_s1 = counter_s1 + 1
         events[3][0] = clock + d2
         if clock > 120:
             s1_server1.setTiempoOcupado((d2))
@@ -223,6 +226,7 @@ def event_three():
     global seccionDosAseccionUno
     global seccion2Queue
     global d2_accumulated
+    global counter_s1
     clock = events[2].pop(0)
     #print("e3",events,clock)
     mask_one = seccionDosAseccionUno.get()
@@ -234,6 +238,7 @@ def event_three():
         queue_s1 = queue_s1 + 1
         d2 = generate_distribution(1)
         d2_accumulated = d2_accumulated + d2
+        counter_s1 = counter_s1 + 1
         events[3][0] = clock + d2
         if clock > 120:
             s1_server1.setTiempoOcupado((d2))
@@ -270,6 +275,7 @@ def event_four():
         s1_server1.setMascarillaSiendoAtendida(new_mask)
         d2 = generate_distribution(1)
         d2_accumulated = d2_accumulated + d2
+        counter_s1 = counter_s1 + 1
         if clock > 120:
             s1_server1.setTiempoOcupado(( d2))
         events[3][0] = clock + d2
@@ -295,6 +301,7 @@ def event_five():
     global queue_s2
     global d3_accumulated
     global d4_accumulated
+    global counter_s2
     clock = events[4].pop(0)
     #print("e5",events,clock)
     if queue_s2 >= 1:
@@ -311,6 +318,7 @@ def event_five():
             queue_s2 = queue_s2 - 1
             d3 =generate_distribution(2)
             d3_accumulated = d3_accumulated + d3
+            counter_s2 = counter_s2 + 1
             events[5][0] = clock + d3
             s2_server1.setOcupado(True)
             if clock > 120:
@@ -327,6 +335,7 @@ def event_five():
             queue_s2 = queue_s2 - 1
             d4 = generate_distribution(3)
             d4_accumulated = d4_accumulated + d4
+            counter_s2 = counter_s2 + 1
             events[6][0] = clock + d4
             if clock > 120:
                 s2_server2.setTiempoOcupado((d4))
@@ -360,7 +369,6 @@ def event_six():
     global seccion2Queue
     global counter_s2
     global d3_accumulated
-    counter_s2 = counter_s2 + 1
     #s2_server1 = False
     clock = events[5][0]
     #print("e6",events,clock)
@@ -374,6 +382,7 @@ def event_six():
         queue_s2 = queue_s2 - 2
         d3 = generate_distribution(2)
         d3_accumulated = d3_accumulated + d3
+        counter_s2 = counter_s2 + 1
         events[5][0] = clock + d3
         #s2_server1.setTiempoOcupado((d3))
     else:
@@ -413,7 +422,6 @@ def event_seven():
     global time_masks_Desechadas
     global counter_s2
     global d4_accumulated
-    counter_s2 = counter_s2
     clock = events[6][0]
     #print("e7",events,clock)
     mask_ready1 = s2_server2.desencolarMascarrilla()
@@ -426,6 +434,7 @@ def event_seven():
         queue_s2 = queue_s2 - 2
         d4 = generate_distribution(3)
         d4_accumulated = d4_accumulated + d4
+        counter_s2 = counter_s2 + 1
         events[6][0] = clock + d4
         #s2_server2.setTiempoOcupado((d4))
     else:
@@ -493,7 +502,6 @@ def calcularIntervalo():
     sumatoria=0
 
     for i in varianza:
-
         sumatoria=sumatoria+(pow((i-mediaMuestral),2))
 
     varianzaMuestral= sumatoria/9

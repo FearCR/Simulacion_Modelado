@@ -508,8 +508,8 @@ def calcularIntervalo():
 
     final=math.sqrt((varianzaMuestral/10))
 
-    limiteInferior=(mediaMuestral-2.26)*final
-    limiteSuperior = (mediaMuestral + 2.26) * final
+    limiteInferior=mediaMuestral-(2.26*final)
+    limiteSuperior = mediaMuestral + (2.26 * final)
 
 
     print("El intervalo de confianza para el tiempo que dura una mascarilla en el sistema :[",limiteInferior,",",limiteSuperior,"]")

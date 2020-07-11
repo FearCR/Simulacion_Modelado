@@ -159,6 +159,7 @@ def event_one():
         mask.set_initial_clock(clock)
         s1_server1.setMascarillaSiendoAtendida(mask)
         d2 = generate_distribution(1)
+        print("Tiempo de servicio", d2)
         d2_accumulated = d2_accumulated + d2
         #print("se esta imprimiendo d2 : ", d2)
         if clock > 120:
@@ -492,6 +493,7 @@ def calcularIntervalo():
     sumatoria=0
 
     for i in varianza:
+
         sumatoria=sumatoria+(pow((i-mediaMuestral),2))
 
     varianzaMuestral= sumatoria/9
@@ -553,33 +555,33 @@ def main():
             distributions[distribution] = int(input(
                 "1 : Uniforme - 2: Directo  - 3 : Exponencial - 4 : Convolucion  : - 5 : Funcion Densidad  :\n"))
             if distributions[distribution] == 1:
-                uniform_param_1[distribution] = int(input(
+                uniform_param_1[distribution] = float(input(
                     "ingrese el valor de a "))
-                uniform_param_2[distribution] = int(input(
+                uniform_param_2[distribution] = float(input(
                     "ingrese el valor de b "))
                 distribution = distribution + 1
                 d = d + 1
             elif distributions[distribution] == 2:
-                normal_param_1[distribution] = int(input("ingrese el valor de miu : "))
-                normal_param_2[distribution] = int(input("ingrese el valor de la varianza  : "))
+                normal_param_1[distribution] = float(input("ingrese el valor de miu : "))
+                normal_param_2[distribution] = float(input("ingrese el valor de la varianza  : "))
                 distribution = distribution + 1
                 d = d + 1
             elif distributions[distribution] == 3:
-                exponential_param[distribution] = int(input("ingrese el valor de lambda : "))
+                exponential_param[distribution] = float(input("ingrese el valor de lambda : "))
                 distribution = distribution + 1
                 d = d + 1
             elif distributions[distribution] == 4:
-                convolution_param_1[distribution] = int(input("ingrese el valor de miu : "))
-                convolution_param_2[distribution] = int(input("ingrese el valor de la varianza  : "))
+                convolution_param_1[distribution] = float(input("ingrese el valor de miu : "))
+                convolution_param_2[distribution] = float(input("ingrese el valor de la varianza  : "))
                 distribution = distribution + 1
                 d = d + 1
             elif distributions[distribution] == 5:
-                constanteK[distribution] = int(input(
+                constanteK[distribution] = float(input(
                     "ingrese la constante "))
-                a[distribution] = int(input(
+                a[distribution] = float(input(
                     "ingrese el valor de a "))
 
-                b[distribution] = int(input(
+                b[distribution] = float(input(
                     "ingrese el valor de b "))
                 distribution = distribution + 1
                 d = d + 1

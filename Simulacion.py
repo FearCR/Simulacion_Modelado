@@ -729,7 +729,7 @@ def main():
         calcularIntervalo()
     calcularEstadisticasFinales()
     print("-------------------------------------------------------------------------")
-
+    input("\nPresione Enter para finalizar...")
 
 
 if __name__ == "__main__":

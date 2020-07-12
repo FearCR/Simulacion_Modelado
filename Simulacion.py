@@ -178,10 +178,19 @@ def generate_distribution(index_distribution):
             return funcionDensidad(constanteK[index_distribution],a[index_distribution],b[index_distribution])
 
 '''
-@Descripción: Se encarga de generar y programas el evento 
+@Descripción: Se encarga de ejecutar y programar posteriormente el evento 1:
 llega mascarilla del exterior a Seccion 1
-@utiliza
-@modifica
+@utiliza: 
+events, para adelantar el reloj al tiempo en que ocurre el evento
+s1_server1, pra saber si el servidor esta ocupado
+@modifica: 
+clock, cuando llega una mascarilla adelanta el reloj al momento de su llegada.
+queue_s1, si el servidor esta ocupado, envia la mascarilla a la cola.
+s1_server1, si esta desocupado, se ocupa.
+totalMascarillasIngresan, aumenta el numero de mascarillas que ingresan al sistema.
+d2_accumulated, acumula la distribucion d2 para calcular el Ws promedio de esta seccion.
+counter_s1, aumenta la cantidad de veces que una mascarilla paso por esta seccion.
+events, programa el evento 1 y el evento 4,
 '''
 #llega mascarilla del exterior a Seccion 1
 def event_one():
@@ -223,9 +232,19 @@ def event_one():
     #print(s1_server1.getOcupado())
     return
 '''
-@Descripción
-@utiliza
-@modifica
+@Descripción:Se encarga de ejecutar el evento 2: llegan 2 mascarillas de la seccion 2 servidor1 a la seccion 1
+@utiliza:
+s1_server1, para saber si el servidor esta ocupado
+events, para adelantar el reloj al tiempo en que ocurre el evento
+@modifica:
+clock, cuando llega una mascarilla adelanta el reloj al momento de su llegada.
+queue_s1, si el servidor esta ocupado, envia la mascarilla a la cola.
+s1_server1, si esta desocupado, se ocupa.
+d2_accumulated, acumula la distribucion d2 para calcular el Ws promedio de esta seccion.
+counter_s1, aumenta la cantidad de veces que una mascarilla paso por esta seccion.
+events, programa el evento 4.
+seccionDosAseccionUno, elimina las mascarillas del sistema de colas implementado para controlar
+las mascarillas que son enviadas de vuelta de la seccion 2.
 '''
 #llegan 2 mascarillas de la seccion 2 al servidor1
 def event_two():
@@ -262,9 +281,19 @@ def event_two():
         #print(s1_server1)
     return
 '''
-@Descripción
-@utiliza
-@modifica
+@Descripción:Se encarga de ejecutar el evento 3:llegan 2 mascarillas de la seccion 2 servidor2 a la seccion 1
+@utiliza:
+s1_server1, para saber si el servidor esta ocupado
+events, para adelantar el reloj al tiempo en que ocurre el evento
+@modifica:
+clock, cuando llega una mascarilla adelanta el reloj al momento de su llegada.
+queue_s1, si el servidor esta ocupado, envia la mascarilla a la cola.
+s1_server1, si esta desocupado, se ocupa.
+d2_accumulated, acumula la distribucion d2 para calcular el Ws promedio de esta seccion.
+counter_s1, aumenta la cantidad de veces que una mascarilla paso por esta seccion.
+events, programa el evento 4.
+seccionDosAseccionUno, elimina las mascarillas del sistema de colas implementado para controlar
+las mascarillas que son enviadas de vuelta de la seccion 2.
 '''
 #llegan 2 mascarillas de la seccion 2 servidor2
 def event_three():
@@ -300,9 +329,14 @@ def event_three():
         queue_s1 = queue_s1 + 2
     return
 '''
-@Descripción
-@utiliza
+@Descripción:Se encarga de ejecutar el evento 4:Se desocupa la seccion 1
+@utiliza:
+queue_s1, revisa si la cola esta vacia
 @modifica
+clock, adelanta el reloj
+s1_server1, desocupa el servidor si no hay mas mascarillas en cola
+events, programa el evento 4, y el evento 5.
+queue_s1, reduce la cola de la seccion 1.
 '''
 #se desocupa la seccion 1
 def event_four():
@@ -318,12 +352,9 @@ def event_four():
     global time_masks_Desechadas
     global d2_accumulated
     global counter_s1
-    #counter_s1 = counter_s1 + 1
     clock = events[3][0]
-    #print("e4",events,clock)
     mask = s1_server1.getMascarillaSiendoAtendida()
     if queue_s1 > 0:
-        #print("se suma sigue cola")
         queue_s1 = queue_s1 - 1
         new_mask = s1_server1.desencolarMascarrilla()
         s1_server1.setMascarillaSiendoAtendida(new_mask)
@@ -346,9 +377,18 @@ def event_four():
             time_masks_Desechadas=time_masks_Desechadas+(clock - mask.get_initial_clock())
     return
 '''
-@Descripción
-@utiliza
+@Descripción:Se encarga de ejecutar el evento 5:llega una mascarilla a la seccion 2
+@utiliza:
+s2_server1, revisa si el encargado 1 de la secccion 2 esta ocupado
+s2_server2,revisa si el encargado 1 de la secccion 2 esta ocupado
+queue_s2, revisa si en la cola hay suficientes mascarillas para procesar
 @modifica
+clock, adelanta el reloj
+events, programa los eventos 6 y 7
+queue_s2, aumenta la cola de s2 si los servidores estan ocupados o si 
+no hay suficientes mascarillas para procesar
+d3 y d4_accumulated, acumula el tiempo que duran procesando mascarillas los encargados de esta seccion
+counter_s2, aumenta la cantidad de mascarillas que se procesan en la seccion 2.
 '''
 #llega una mascarilla a la seccion 2
 def event_five():
@@ -411,9 +451,19 @@ def event_five():
     return
 
 '''
-@Descripción
+@Descripción:Se encarga de ejecutar el evento 6:se desocupa el servidor 1 de la seccion 2
 @utiliza
-@modifica
+queue_s2, para ver si hay suficientes mascarillas para seguir procesando
+MAX_VALUE, se utiliza para representar infinito en caso de que no se procesen mas mascarillas
+@modifica:
+clock, adelanta el reloj
+events, programa el evento 6, y el evento 2.
+queue_s2, si hay suficientes mascarillas para procesar las saca de la cola
+paquetesListos, aumenta la cantidad de paquetes listos
+mascarillasDesechadas, aumenta la cantidad de mascarillas desechadas
+time_masks, y time_masks_Desechadas, establece el tiempo que paso una mascarilla en el sitema
+antes de salir.
+seccionDosAseccionUno, aumenta la cola de mascarillas que se devuelven a la seccion 1
 '''
 #se desocupa el servidor 1 de la seccion 2
 def event_six():
@@ -470,9 +520,19 @@ def event_six():
     return
 
 '''
-@Descripción
+@Descripción:Se encarga de ejecutar el evento 7:se desocupa el servidor 2 de la seccion 2
 @utiliza
-@modifica
+queue_s2, para ver si hay suficientes mascarillas para seguir procesando
+MAX_VALUE, se utiliza para representar infinito en caso de que no se procesen mas mascarillas
+@modifica:
+clock, adelanta el reloj
+events, programa el evento 6, y el evento 2.
+queue_s2, si hay suficientes mascarillas para procesar las saca de la cola
+paquetesListos, aumenta la cantidad de paquetes listos
+mascarillasDesechadas, aumenta la cantidad de mascarillas desechadas
+time_masks, y time_masks_Desechadas, establece el tiempo que paso una mascarilla en el sitema
+antes de salir.
+seccionDosAseccionUno, aumenta la cola de mascarillas que se devuelven a la seccion 1
 '''
 #se desocupa el servidor 2 de la seccion 2
 def event_seven():
@@ -554,9 +614,9 @@ def get_next_event(events):
 
 
 '''
-@Descripción
-@utiliza
-@modifica
+@Descripción: calcula el promedio de todas las corridas establecidas por el usuario y las despliega en consola.
+@utiliza:Estadisticas, en esta variable se acumularon las estadisticas de todas las corridas
+@modifica:Estadistica, promedia las estadisticas acumuladas
 '''
 def calcularEstadisticasFinales():
     global runs
@@ -657,6 +717,7 @@ def main():
     d = 1
     runs = int(input("ingrese la cantidad de veces que desea correr la simulacion:  "))
     max_Time = int(input("ingrese el tiempo maximo que desea correr la simulacion:  "))
+    #pide al usuario las distribuciones deseadas y sus parametros correspondientes.
     while distribution < 4:
         try:
             print("seleccione cada una de las distribuciones que desea utilizar para d" + str(d))
@@ -698,6 +759,8 @@ def main():
         except ValueError:
             print("entrada invalida")
     TIME_TO_FINISH = max_Time
+    
+    #corre la simulacion la cantidad de veces especificada por el usuario y almacena sus estadisticas 
     for i in range(runs):
         data_init(1)
         while clock < (TIME_TO_FINISH+120):
@@ -835,6 +898,7 @@ def main():
 
     print("\n\n\n\nESTADISTICAS FINALES DE LAS : ", runs, "  SIMULACIONES")
     print("-------------------------------------------------------------------------")
+    #se despliega el intervalo de confianza y las estadisticas finales
     if runs==10:
         calcularIntervalo()
     calcularEstadisticasFinales()

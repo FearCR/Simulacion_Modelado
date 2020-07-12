@@ -12,28 +12,40 @@ clock = 0
 queue_s1 = 0
 queue_s2 = 0
 
+#servidor de la sección 1
 s1_server1 = servidor()
+#servidor 1 de la sección 2 
 s2_server1 = servidor()
+#servidor 2 de la sección 2
 s2_server2 = servidor()
 
+#total de veces que se desea ejecutar la simulación antes de generar estadisticas. 
 runs = 0
 
+#tiempo que trabajan los servidores de ambas secciones. 
 tiempoTrabajador1=0
 tiempoTrabajador2=0
 tiempoTrabajador3=0
 
 paquetesListos=0
 mascarillasDesechadas=0
+
+#vector de eventos, como se puede observar corresponde a 7 campos, los cuales corresponde a los 7 eventos posibles. 
+#cada posición corresponde a un evento, y se una lista, puesto que existen eventos en los que pueden haber más de un mismo evento del mismo tipo
 events = [[MAX_VALUE],[],[],[MAX_VALUE],[],[MAX_VALUE],[MAX_VALUE]]
 distributions = [-1,-1,-1,-1]
 
-
+# se utilizan para simular el envio de mascarillas de la seccion 1 a la seccion 2 y viseversa. 
 seccionUnoAseccionDos = Queue()
 seccionDosAseccionUno = Queue()
 
+#cola de mascarillas compartida por los 2 servidores de la sección 2. 
 seccion2Queue = Queue()
 
+#tiempo total que pasan las mascarillas en el sistema antes de salir del sistema con exito
 time_masks = 0
+
+#tiempo total que pasan las mascarillas en el sistema antes de ser desechadas. 
 time_masks_Desechadas = 0
 
 
@@ -59,16 +71,33 @@ b = [0,0,0,0]
 totalMascarillasIngresan=0
 
 #Estadisticas
+'''
+Descripción: este vector se utiliza para ir guardando los resultados correspondientes
+a las estadisticas finales, cada posición corresponde a una estadistica concreta : 
+0 : tiempo promedio que dura una mascarilla en el sistema antes de desecharse
+1 : tiempo promedio que dura una mascarilla en el sistema antes de estar lista 
+2 : tiempo que dura una mascarilla en el sistema 
+3 : Eficiencia del sistema
+4 : Equilibro del sistema
+5[0] : tota de mascarillas desechadas 
+5[1] : porcentaje equivalente a las mascarillas desechadas de 5[0]
+5[2] : total de mascarillas listas 
+5[3] : porcentaje equivalente a las mascarillas listas de 5[2]
+5[4] : total de mascarillas que ingresaron al sistema
+6[0] : porcentaje que pasa ocupado el servidor de la sección 1 durante toda la simulación 
+6[1] : porcentaje que pasa ocupado el servidor1 de la seccion 2 durante toda la simulación
+6[2] : porcentaje que pasa ocupado el servidor2 de la seccion 2 durante toda la simulación 
+ 
+'''
 Estadisticas = [0,0,0,0,0,[0,0,0,0,0],[0,0,0]]
 
 #Para cacular la varianza
 varianza=[]
 
+#Para calcular la eficiencia del sistema
 d2_accumulated = 0
 d3_accumulated = 0
 d4_accumulated = 0
-
-
 counter_s1 = 0
 counter_s2 = 0
 

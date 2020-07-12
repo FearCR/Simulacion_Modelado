@@ -74,12 +74,27 @@ counter_s2 = 0
 
 
 #distribuciones
+
+'''
+@Descripción: Se encarga de calcular la distribución uniforme con el "a" 
+y "b" que ingresa el usuario y retorna el resultado.
+Para esto generamos un valor aleatorio con la funcion random()
+
+@utiliza: Los parametros "a" y "b" que da el usuario
+@modifica: Nada
+'''
 def uniforme(a,b):
     r=random()
     x=(b-a)*r+a
     return x
-
-def normal(Mu,vari):
+'''
+@Descripción: Se encarga de calcular la distribución normal con el método directo
+con el miu y la varianza que ingresa el usuario y retorna el resultado.
+Para esto generamos dos valores aleatorios con la funcion random()
+@utiliza: Los parametros "miu" y "varianza" que da el usuario
+@modifica: Nada
+'''
+def directo(Mu,vari):
     r1 = random()
     r2 = random()
     Z=(-2*math.log(r1))
@@ -91,12 +106,25 @@ def normal(Mu,vari):
     if x<0:
         x=-1*x
     return x
-
+'''
+@Descripción: Se encarga de calcular la distribución exponencial con el
+lambda que ingresa el usuario y retorna el resultado.
+Para esto generamos un valor aleatorio con la funcion random().
+@utiliza: El lambda que ingresa el usuario
+@modifica:Nada
+'''
 def exponencial(lamb):
     r = random()
     x=(-math.log(1-r))/lamb
     return x
-
+'''
+@Descripción: Se encarga de calcular la distribución normal 
+con el método de convolucióncon el miu y la varianza que 
+ingresa el usuario y retorna el resultado.
+Para esto generamos dos valores aleatorios con la funcion random()
+@utiliza: Los parametros "miu" y "varianza" que da el usuario
+@modifica: Nada
+'''
 def convolucion(Mu,vari):
     Z=0
     for i in range(1,13):
@@ -106,7 +134,13 @@ def convolucion(Mu,vari):
     SD=math.sqrt(vari)
     x = (SD * Z) + Mu
     return x
-
+'''
+@Descripción: Se encarga de calcular la distribución con la funcion densidad
+con la "constanteK" y "a", que da el usuario y retorna el resultado.
+Para esto generamos un valor aleatorio con la funcion random().
+@utiliza: La "constanteK" y "a", que da el usuario
+@modifica: Nada 
+'''
 def funcionDensidad(constanteK,a,b):
     r = random()
     r=2*r
@@ -118,12 +152,16 @@ def funcionDensidad(constanteK,a,b):
     return x
 
 
-
+'''
+@Descripción
+@utiliza
+@modifica
+'''
 def generate_distribution(index_distribution):
         if distributions[index_distribution] == 1:
             return uniforme(uniform_param_1[index_distribution],uniform_param_2[index_distribution])
         elif distributions[index_distribution] == 2:
-            return normal(normal_param_1[index_distribution],normal_param_2[index_distribution])
+            return directo(normal_param_1[index_distribution],normal_param_2[index_distribution])
         elif distributions[index_distribution] == 3:
             return exponencial(exponential_param[index_distribution])
         elif distributions[index_distribution] == 4:
@@ -131,12 +169,15 @@ def generate_distribution(index_distribution):
         elif distributions[index_distribution] == 5:
             return funcionDensidad(constanteK[index_distribution],a[index_distribution],b[index_distribution])
 
-
+'''
+@Descripción
+@utiliza
+@modifica
+'''
 #llega mascarilla del exterior a Seccion 1
 def event_one():
     global clock
     global s1_server1
-    global tiempoTrabajador1
     global events
     global queue_s1
     global seccionUnoAseccionDos
@@ -152,7 +193,7 @@ def event_one():
 
     if s1_server1.getOcupado() == False:
 
-        tiempoTrabajador1=tiempoTrabajador1+1
+
         s1_server1.setOcupado(True)
         #s1_server1 = True
         mask = mascarilla()					#creo la mascarilla.
@@ -179,7 +220,11 @@ def event_one():
     events[0][0] = clock + d1
     #print(s1_server1.getOcupado())
     return
-
+'''
+@Descripción
+@utiliza
+@modifica
+'''
 #llegan 2 mascarillas de la seccion 2 servidor1
 def event_two():
     global clock
@@ -215,7 +260,11 @@ def event_two():
         queue_s1 = queue_s1 + 2
         #print(s1_server1)
     return
-
+'''
+@Descripción
+@utiliza
+@modifica
+'''
 #llegan 2 mascarillas de la seccion 2 servidor2
 def event_three():
     global s1_server1
@@ -249,7 +298,11 @@ def event_three():
         s1_server1.encolarMascarrilla(mask_two)
         queue_s1 = queue_s1 + 2
     return
-
+'''
+@Descripción
+@utiliza
+@modifica
+'''
 #se desocupa la seccion 1
 def event_four():
     global clock
@@ -291,7 +344,11 @@ def event_four():
             mascarillasDesechadas=mascarillasDesechadas+1
             time_masks_Desechadas=time_masks_Desechadas+(clock - mask.get_initial_clock())
     return
-
+'''
+@Descripción
+@utiliza
+@modifica
+'''
 #llega una mascarilla a la seccion 2
 def event_five():
     global clock
@@ -314,7 +371,7 @@ def event_five():
             new_mask = seccion2Queue.get()				#mascarilla 1
             new_mask2 = seccion2Queue.get()				#mascarilla 2
             s2_server1.encolarMascarrilla(new_mask)		#se usa la cola del server para los que esta atendiendo.
-            s2_server1.encolarMascarrilla(new_mask2)	#same
+            s2_server1.encolarMascarrilla(new_mask2)	#Lo mismo
             queue_s2 = queue_s2 - 1
             d3 =generate_distribution(2)
             d3_accumulated = d3_accumulated + d3
@@ -352,7 +409,11 @@ def event_five():
         #print("se encola S2")
     return
 
-
+'''
+@Descripción
+@utiliza
+@modifica
+'''
 #se desocupa el servidor 1 de la seccion 2
 def event_six():
     global events
@@ -407,7 +468,11 @@ def event_six():
             time_masks = time_masks + (clock - mask_ready2.get_initial_clock())
     return
 
-
+'''
+@Descripción
+@utiliza
+@modifica
+'''
 #se desocupa el servidor 2 de la seccion 2
 def event_seven():
     global clock
@@ -458,10 +523,24 @@ def event_seven():
             time_masks = time_masks + (clock - mask_ready2.get_initial_clock())
     return
 
+
+'''
+@Descripción: Inicia la simulacion, programa la llegada de la primera
+mascarilla al sistema
+@utiliza: events[0][0]
+@modifica: events[0][0]
+'''
 #metodo para inicializar datos para iniciar la simulacion
 def data_init(e1):
 	events[0][0]=e1
 
+
+'''
+@Descripción: Se encarga de retornar el evento próximoa ocurrir que se encuentra
+en ¨events¨
+@utiliza: events
+@modifica: Nada
+'''
 #metodo para buscar el evento mas proximo
 def get_next_event(events):
     next_event=0
@@ -470,6 +549,14 @@ def get_next_event(events):
             if events[i][0]<events[next_event][0]:
                 next_event=i
     return next_event
+
+
+
+'''
+@Descripción
+@utiliza
+@modifica
+'''
 def calcularEstadisticasFinales():
     global runs
     global Estadisticas
@@ -493,12 +580,26 @@ def calcularEstadisticasFinales():
     print("Porcentaje ocupado s2_server2 : ", Estadisticas[6][2], "%")
 
 
+'''
+@Descripción: Se encarga de calcular el intervalo de confianza
+cuanto la cantidad de corridas que digita el usuario es de 10
+@utiliza:
+La varible global varianza la cual almacena los resultados individuales 
+de el tiempo que dura una mascarilla en el sistema, y se utliza para
+calcular la varianza muestral.
 
+La varible global Estadisticas que es un vector, el cual almacena en sumatoria
+los resultados de las diferentes estadisticas, en este caso en la posición 2
+del vector almacena la sumatoria del tiempo que dura una mascarilla en el sistema
+para las 10 corridas, con dicho valor se divide entre 10 y obtenemos la media muestral.
+@modifica: Nada
+'''
 def calcularIntervalo():
     global varianza
     global Estadisticas
     mediaMuestral=(Estadisticas[2]/10)
 
+    # Para calcular la varianza muestral
     sumatoria=0
 
     for i in varianza:
@@ -551,8 +652,6 @@ def main():
     global d4_accumulated
     global counter_s2
 
-
-
     distribution = 0
     d = 1
     runs = int(input("ingrese la cantidad de veces que desea correr la simulacion:  "))
@@ -561,7 +660,7 @@ def main():
         try:
             print("seleccione cada una de las distribuciones que desea utilizar para d" + str(d))
             distributions[distribution] = int(input(
-                "1 : Uniforme - 2: Directo  - 3 : Exponencial - 4 : Convolucion  : - 5 : Funcion Densidad  :\n"))
+                "1 : Uniforme - 2: Normal directo  - 3 : Exponencial - 4 : Normal convolucion  : - 5 : Funcion Densidad  :\n"))
             if distributions[distribution] == 1:
                 uniform_param_1[distribution] = float(input(
                     "ingrese el valor de a "))
@@ -702,7 +801,7 @@ def main():
 
 
 
-        #print("las estadisticas son : ", Estadisticas)
+        #reinicio de las variables globales
 
         clock = 0
         queue_s1 = 0

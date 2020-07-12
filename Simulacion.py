@@ -598,7 +598,7 @@ def event_seven():
         #s2_server2 = False
     random_value = randrange(100)
     if random_value > 15 and random_value < 40:
-        events[3].append(clock + 2)
+        events[2].append(clock + 2)
         seccionDosAseccionUno.put(mask_ready1)
         seccionDosAseccionUno.put(mask_ready2)
     elif random_value <= 15:

@@ -153,9 +153,17 @@ def funcionDensidad(constanteK,a,b):
 
 
 '''
-@Descripción
-@utiliza
-@modifica
+@Descripción: Se encarga de generar el valor de la distribuciones que ha elegido
+el usuario. 
+@utiliza:
+La variable ¨distributions¨, que es un arreglo de 4 posiciones, el cual almacena
+las 4 distribuciones que eligió el usuario.
+La variable  ¨index_distribution¨, se utiliza para conecer el valor de las
+4 posiciones del arreglo y saber cuales distribuciones generar, como para
+acceder a los parametros que digitó el usuario para dichas distribuciones,
+como es el caso de las varibles que terminan en "_param".
+
+@modifica:Nada
 '''
 def generate_distribution(index_distribution):
         if distributions[index_distribution] == 1:
@@ -170,7 +178,8 @@ def generate_distribution(index_distribution):
             return funcionDensidad(constanteK[index_distribution],a[index_distribution],b[index_distribution])
 
 '''
-@Descripción
+@Descripción: Se encarga de generar y programas el evento 
+llega mascarilla del exterior a Seccion 1
 @utiliza
 @modifica
 '''
@@ -180,9 +189,6 @@ def event_one():
     global s1_server1
     global events
     global queue_s1
-    global seccionUnoAseccionDos
-    global seccionDosAseccionUno
-    global seccion2Queue
     global totalMascarillasIngresan
     global d2_accumulated
     global counter_s1
@@ -192,12 +198,9 @@ def event_one():
         totalMascarillasIngresan=totalMascarillasIngresan+1
 
     if s1_server1.getOcupado() == False:
-
-
         s1_server1.setOcupado(True)
         #s1_server1 = True
         mask = mascarilla()					#creo la mascarilla.
-        mask.setTiempoEncola(0)				#el tiempo cuando se crea es 0.
         mask.set_initial_clock(clock)
         s1_server1.setMascarillaSiendoAtendida(mask)
         d2 = generate_distribution(1)
@@ -212,7 +215,6 @@ def event_one():
     else:
         #print("se encola")
         mask = mascarilla()
-        mask.setTiempoEncola(0)
         mask.set_initial_clock(clock)
         s1_server1.encolarMascarrilla(mask)
         queue_s1 = queue_s1 + 1
@@ -225,12 +227,11 @@ def event_one():
 @utiliza
 @modifica
 '''
-#llegan 2 mascarillas de la seccion 2 servidor1
+#llegan 2 mascarillas de la seccion 2 al servidor1
 def event_two():
     global clock
     global s1_server1
     global events
-    global tiempoTrabajador2
     global queue_s1
     global seccionUnoAseccionDos
     global seccionDosAseccionUno
@@ -527,8 +528,8 @@ def event_seven():
 '''
 @Descripción: Inicia la simulacion, programa la llegada de la primera
 mascarilla al sistema
-@utiliza: events[0][0]
-@modifica: events[0][0]
+@utiliza: events
+@modifica: events
 '''
 #metodo para inicializar datos para iniciar la simulacion
 def data_init(e1):

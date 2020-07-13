@@ -1,4 +1,7 @@
 # Queuing Network Simulation (espanol):
+
+## Modelo a simular:  
+  
 En una empresa que fabrica mascarillas para prevenir infectar e infectarse del Covid-19, hay 2
 diferentes secciones: la 1 y 2. La 1 sección 1 recibe las mascarillas ya confeccionadas una a
 una para desinfectarse también una a una. Ya desinfectadas se envían también una a una a la

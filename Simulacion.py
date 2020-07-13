@@ -575,17 +575,17 @@ def event_six():
         s2_server1.setOcupado(False)
         # s2_server1 = False
     random_value = randrange(100)
-    if random_value >= 20 and random_value < 75:
+    if random_value < 20:
         events[1].append(clock + 2)
         seccionDosAseccionUno.put(mask_ready1)  # las meto en esa lista, para que el evento 2 las pueda sacar.
         seccionDosAseccionUno.put(mask_ready2)
-    elif random_value >= 5 and random_value < 20:
+    elif random_value >= 20 and random_value<25:
         if clock > 120:
             mascarillasDesechadas = mascarillasDesechadas + 2
             time_masks_Desechadas = time_masks_Desechadas + (clock - mask_ready1.get_initial_clock())
             time_masks_Desechadas = time_masks_Desechadas + (clock - mask_ready2.get_initial_clock())
 
-    elif random_value >= 75:
+    elif random_value >= 25:
         if clock > 120:
             paquetesListos = paquetesListos + 1
             time_masks = time_masks + (clock - mask_ready1.get_initial_clock())
@@ -645,11 +645,11 @@ def event_seven():
         s2_server2.setOcupado(False)
         # s2_server2 = False
     random_value = randrange(100)
-    if random_value > 15 and random_value < 40:
+    if random_value < 25:
         events[2].append(clock + 2)
         seccionDosAseccionUno.put(mask_ready1)
         seccionDosAseccionUno.put(mask_ready2)
-    elif random_value <= 15:
+    elif random_value >= 25 and random_value < 40:
         if clock > 120:
             mascarillasDesechadas = mascarillasDesechadas + 2
             time_masks_Desechadas = time_masks_Desechadas + (clock - mask_ready1.get_initial_clock())
@@ -943,8 +943,13 @@ def main():
         Estadisticas[6][2] = Estadisticas[6][2] + (
                 100 * (float(s2_server2.getTiempoOcupado() / (TIME_TO_FINISH - 120))))
 
+
+
         print("Longitud de la cola seccion 1:", s1_server1.getLongitudCola())
+
         print("Longitud de la cola seccion 2:", seccion2Queue.qsize())
+
+
 
         # print("las estadisticas son : ", Estadisticas)
         input("\n\npresione la tecla Enter para continuar...\n\n")
